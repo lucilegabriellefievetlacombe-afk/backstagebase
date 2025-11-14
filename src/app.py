@@ -5,24 +5,46 @@ import socket
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    """home"""
+    return """
+    <h1>home</h1>
+    <ul>
+        <li><a href="api/json/v1/info">info</a></li>
+        <li><a href="api/html/v1/details">hello</a></li>
+        <li><a href="api/json/v1/details">json hello</a></li>
+        <li><a href="api/json/v1/healthz">health check</a></li>
+    </ul>
+    """
 
-@app.route('/api/v1/info')
-
+@app.route('/api/json/v1/info')
 def info():
+    """get time, hostname and blabla"""
     return jsonify({
-    	'time': datetime.datetime.now().strftime("%I:%M:%S%p  on %B %d, %Y"),
+    	'time': datetime.datetime.now().strftime("%I:%M:%S%p on %A %d %B, %Y"),
     	'hostname': socket.gethostname(),
         'message': 'You are doing great, little human! <3',
-        'deployed_on': 'kubernetes'
+        'deployed_on': 'localhost 4 the moment'
     })
 
-@app.route('/api/v1/healthz')
+@app.route('/api/html/v1/details')
+def details():    
+    """say hello in html"""
+    return '<h1>hello world</h1>'
 
+@app.route('/api/json/v1/details')
+def json_details():
+    """say hello in json"""
+    return jsonify({ 'msg' : 'hello world' })
+
+@app.route('/api/json/v1/healthz')
 def health():
+    """get health status"""
 	# Do an actual check here
     return jsonify({'status': 'up'}), 200
 
 if __name__ == '__main__':
-
+    #app.run()
+    ## from anywhere :]
     app.run(host="0.0.0.0")
-
