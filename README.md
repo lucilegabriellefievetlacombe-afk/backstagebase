@@ -341,7 +341,7 @@ kind --version
     kind version 0.30.0
 ```
 
-### Create local cluster
+### Create local k8s cluster
 
 * try kind :
   * create cluster
@@ -664,7 +664,7 @@ spec:
 ```
 
 * into k8s/deploy.yam
-* change app name fron nginx to python-app for example
+* change app name fron *nginx* to **python-app** for example
 * extend app name modification in spec selector and template
 * set replicas to 1 for the démo
 * change container name as well
@@ -676,8 +676,89 @@ vim k8s/deploy.yaml
 
 our [k8s/deploy.yaml](k8s/deploy.yaml)
 
+* deploy
+
 ```bash
 kubectl apply -f k8s/deploy.yaml
-deployment.apps/python-app created
+  deployment.apps/python-app created
 ```
 
+* check deployment
+
+```bash
+kubectl get deployments
+  NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+  python-app   1/1     1            1           101s
+```
+
+### Create k8s Services
+
+how do we access our deployed applicatiob via broswer ?
+
+* copy definig a service
+https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/service/simple-service.yaml
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+```
+
+* copy it inside k8s/service.yaml
+* change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
+* set the source port (port forwarded exposed) and the container target port (container port)
+
+```bash
+vim k8s/service.yaml
+```
+
+our [k8s/service.yaml](k8s/service.yaml)
+
+* apply k8s/service.yaml
+
+```bash
+kubectl apply -f k8s/service.yaml
+  service/python-app created
+```
+
+* check service
+
+```bash
+kubectl get svc
+  NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+  kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP    3h7m
+  python-app   ClusterIP   10.96.163.6   <none>        8080/TCP   3m20s
+```
+
+* check forwarding, look for endpoints, one is enough
+
+```bash
+kubectl describe svc python-app
+  Name:                     python-app
+  Namespace:                default
+  Labels:                   <none>
+  Annotations:              <none>
+  Selector:                 app=python-app
+  Type:                     ClusterIP
+  IP Family Policy:         SingleStack
+  IP Families:              IPv4
+  IP:                       10.96.163.6
+  IPs:                      10.96.163.6
+  Port:                     <unset>  8080/TCP
+  TargetPort:               5000/TCP
+  Endpoints:                10.244.0.8:5000
+  Session Affinity:         None
+  Internal Traffic Policy:  Cluster
+  Events:                   <none>
+```
+
+### Expose the application
