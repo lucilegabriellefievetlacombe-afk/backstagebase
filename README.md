@@ -674,4 +674,10 @@ spec:
 vim k8s/deploy.yaml
 ```
 
-[result](k8s/deploy.yaml)
+our [k8s/deploy.yaml](k8s/deploy.yaml)
+
+```bash
+kubectl apply -f k8s/deploy.yaml
+deployment.apps/python-app created
+```
+
