@@ -310,7 +310,7 @@ docker push ${TheLogin}/pyhton-app
 
 ## Kubernetes local Cluster
 
-### install kind
+### install kind on wsl2 linux
 
 * get in [wsl2](https://kind.sigs.k8s.io/docs/user/using-wsl2/)
 * check architecture
@@ -321,11 +321,14 @@ uname -m
 ```
 
 * get kind bin
+* check sha256 signature
 * add exec right
 * mv kind into /usr/local/bin
 
 ```bash
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-$(uname)-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-$(uname)-amd64.sha256sum
+echo "$(cat kind.sha256)  kind" | sha256sum --check
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 ```
