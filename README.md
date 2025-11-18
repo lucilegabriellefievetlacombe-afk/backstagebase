@@ -406,104 +406,272 @@ kubectl version --output=yaml
 kubectl [command] [RESOURCE TYPE] [NAME] [flags]
 ```
 
-- **command** :
-  - alpha : kubectl **alpha** SUBCOMMAND [flags] : List available alpha commands.
-  - annotate : kubectcl **annotate** (-f FILENAME | TYPE) K0=V0 K1=V1.. [--overwrite] [--all] [--resource-version=VX] [flags] : Add or update the annotations of n resources.
-  - api-resources : kubectl **api-resource** [flags] : List available API resources.
-  - api-versions : kubectl **api-versions** [flags] : List available API versions.
-  - apply : kubectl **apply** -f FILENAME [flags] : Apply configuration from a file or stin
-  - attach : kubectl **attach** POD -c CONTAINER [-i] [-t] [falgs] : Attach to a running container stdin.
-  - auth : kubectl **auth** [flags] [options] : Inspect authorization.
-  - autoscale : kubectl **autoscale** (-f FILENAME | TYPE) [--min|max=NBPODS] [--cpu-percent=CPU] [flags] : Automatically scale the set of pods that are managed by a replication controller.
-  - certificate : kubectl **certificate** SUBCOMMAND [options] : Modify certificate resource.
-  - cluster-info : kubectl **cluster-info** [flags] : Display endpoint informations of master and srvices in the cluster.
-  - completion : kubectl **completion** SHELL [options] : Output shell completion code for the specified shell (bash or zsh).
-  - config : kubectl **config** SUBCOMMAND [flags] : Modify kube config files.
-  - cordon : kubectl **cordon** NODE [options] : Mark node as unschedulable.
-  - uncordon : kubectl **uncordon** NODE [options] : Mark node as schedulable.
-  - cp : kubectl cp <file-spec-src> <file-spec-dest> [options] : Copy files and directories from to containers.
-  - **create** : kubectl **create** -f FILENAME [flags] : Create resources from file or stdin
-  - **delete** : kubectl **delete** (-f FILENAME | TYPE) -l label [flags]: Delete resources from file or stdin or/and label selectors, names, resource selectors, resource id.
-  - **describe** : kubectl **describe** (-f FILENAME | TYPE) -l label [flags]: Display detailed states of one or more resources.
-  - **diff** : kubectl **diff** -f FILENAME [flags]: Diff file or stdin against live configuration.
-  - **drain** : kubectl **drain** NODE [options]: Drain node in prepartion of maintenance.
-  - **edit** :  kubectl **edit** (-f FILENAME | TYPE) [flags] : Edit and update the definition of resources on the serveur by using the default editor.
-  - **events** : kubectl **events** : List events.
-  - **exec** : kubectl **exec** POD [-c CONTAINER] [-i] [-t] [flags] [--COMMAND] [args...] : Execute a command against a container in a POD.
-  - explain : kubectl **explain** TYPE [--recursive=false] [flags] : Get documentations of various resources. For instance pods, nodes, services etc.
-  - **expose** : kubectl **expose** (-f FILENAME | TYPE) --port=PORT --protocole=TCP|UDP --target-port=NAME|PORT --name=NAME --extarnal-ip=IP --type=TYPE [flags] : Expose a replication controller, service, or pod as a new k8s service.
-  - **get** : kubectl get (-f FILENAME | TYPE) [--watch] [--sort-by=FIELD] [-o=OUTPUT_FORMAT] [flags] : List resources.
-  - kustomize : kubectl **kustomize** <dir> [flags] [options] : List a set of API resources generated from kustomization.yaml instruction file.
-  - **label** : kubectl **label** (-f FILENAME | TYPE) K0=V0 K1=V1.. [--overwrite] [--all] [--resource-version=VX] [flags]: Add or update the labels of n resources.
-  - **logs** : kubectl **logs** POD [-c CONTAINER] [--follow] [flags] : Print the logs for a container in a pod or specified resource. If the pod has only one container, the container name is optional.
-  - **options** : kubectl **options** : List of global command-line options, witch apply to all commands.
-  - patch : kubectl **patch** (-f FILENAME | TYPE) --patch PATCH [flags] : Update fields of a resource using strategic merge patch, a JSON merge patch, or a JSON patch..
-  - plugin : kubectl **plugin** [flags] [options] : Provides utilities for interacting with plugins.
-  - port-forward : kubectl ***port-forward** POD [LOCAL_PORT:] REMOTE_PORT [...[LOCAL_PORT_N:]REMOTE_PORT_N] [flags]: Forward one or more local ports to a pod.
-  - proxy : kubectl **proxy** [--port=PORT] [--www=static-dir] [--www-prefix=prefix] [api--prefix=prefix] [flags] : Creates a proxy server or application-level gateway between localhost and the Kubernetes API server. It also allows serving static content over specified HTTP path. All incoming data enters through one port and gets forwarded to the remote Kubernetes API server port, except for the path matching the static content path.
-  - replace : kubectl **replace** -f FILENAME : Replace a resource from a file or stdin.
-  - rollout : kubectl **rollout** SUBCOMMAND [options] : Manage the rollout of a resource like deployments, daemonsets and statefulsets.
-  - **run** : kubectl **run** NAME --image=image [--env="K=V"] [--port=PORT] [--dry-run=server|client|none] [--overrides=inline-json] [flags] : Run a specified image on the cluster.
-  - **scale** : kubectl **scale** (-f FILENAME | TYPE) --replicas=COUNT [--resource-version=VERSION] [--current-replicas=count] [flags] : Set a new size for a deployment, replica set, replication controller, or stateful set.
-  - set : kubectl **set** SUBCOMMAND [options] : Configure application resource.
-  - taint : kubectl **taint** NODE NAME K0=V0:T0 K1=V1:T1 [options] : Update the taints on one or more nodes. Ex Add a taint with key 'dedicated' on nodes having label myLabel=X :
-  kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
-  - **top** : kubectl **top** (POD | NODE) [flags] [options] : Display CPU/MEM/Storage usage for a pod or node.
-  - version : kubectl **version** [--client] [flags] : Display the kubernetes version running on the client and server.
-  - wait : kubectl **wait** ([-f FILENAME] | resource.group/resource.name | resource.group [(-l label | --all)]) [--for=delete|--for condition=available] [options] : Experimental: Wait for a specific condition on one or many resources.
-  
-  
-- RESSOURCE TYPE
-  - bindings : Binding
-  - componentstatuses - **cs** : ComponentStatus
-  - **configmaps - cm** : ConfigMap
-  - endpoints - **ep** : Endpoints
-  - events - **ev** (events) : Event
-  - limitranges - **limits** : LimitRange
-  - namespaces - **ns** : Namespace
-  - **nodes - no** : Node
-  - persistantvolumeclaims - **pvc** : PersistantVolumeClaim
-  - **persistantvolumes - pv** : PersistantVolume
-  - **pods - po** : Pod
-  - podtemplates : PodTemplate
-  - replicationcontrollers - **rc** : ReplicationController
-  - resourcequotas - **quota** : ResourceQuotas
-  - **secrets** : Secret
-  - serviveaccounts - sa : ServiceAccount
-  - services - **svc** : Service
-  - customeresourcedefinitions - **crd**, cdrs (apiextensions) : CustomResourceDefinition
-  - apiservices (apiregistration) : APIService
-  - controllerrevisions (apps) : ControllerRevision
-  - **daemonset - ds** (apps) : DaemonSet
-  - **deployments - deploy** (apps) : Deployment
-  - **replicasets - rs** (apps) : ReplicaSet
-  - **statefulsets - sts** (apps) : StatefulSet
-  - tokenreviews (authentication) : TokenReview
-  - [local|self|-]subject[access|rule]reviews (authorization) : *Subject*Review
-  - horizontalpodautoscalers - **hpa** (autoscalling) : HorizontalPodAutoscaler
-  - cronjobs - **cj** (batch) : CronJob
-  - **jobs** (batch) : Job
-  - certificatesigningrequests - **csr** (certificates) : CertificateSigningRequest
-  - flowschemas (flowcontrol) : FlowSchema
-  - ingressclasses (networking) : IngressClass
-  - **ingress - ing** (networking) : Ingress
-  - networkpolicies - **netpol** (networking) : NetworkPolicies
-  - runtimeclasses (node) : RuntimeClass
-  - poddisruptionbudgets - **pdb** (policy) : PodDisruptionBudget
-  - podsecuritypolicies - **psp** (policy) : PodSecurityPolicy
-  - clusterrolebindings (rbac) : ClusterRoleBiding
-  - clusterroles (rbac) : ClusterRole
-  - roles (rbac) : RoleBinding
-  - priorityclasses - **pc** (sheduling) : PriorityClass
-  - csidrivers (storage) : CSIDriver
-  - csinodes (storage) : CSIStorageCapacity
-  - storageclasses - **sc** (storage) : StorageClass
-  - volumeattachements (storage) : VolumeAttachement  
+<details> <summary> command: </summary>
+
+* alpha : kubectl **alpha** SUBCOMMAND [flags] : List available alpha commands.
+* annotate : kubectcl **annotate** (-f FILENAME | TYPE) K0=V0 K1=V1.. [--overwrite] [--all] [--resource-version=VX] [flags] : Add or update the annotations of n resources.
+* api-resources : kubectl **api-resource** [flags] : List available API resources.
+* api-versions : kubectl **api-versions** [flags] : List available API versions.
+* apply : kubectl **apply** -f FILENAME [flags] : Apply configuration from a file or stin
+* attach : kubectl **attach** POD -c CONTAINER [-i] [-t] [falgs] : Attach to a running container stdin.
+* auth : kubectl **auth** [flags] [options] : Inspect authorization.
+* autoscale : kubectl **autoscale** (-f FILENAME | TYPE) [--min|max=NBPODS] [--cpu-percent=CPU] [flags] : Automatically scale the set of pods that are managed by a replication controller.
+* certificate : kubectl **certificate** SUBCOMMAND [options] : Modify certificate resource.
+* cluster-info : kubectl **cluster-info** [flags] : Display endpoint informations of master and srvices in the cluster.
+* completion : kubectl **completion** SHELL [options] : Output shell completion code for the specified shell (bash or zsh).
+* config : kubectl **config** SUBCOMMAND [flags] : Modify kube config files.
+* cordon : kubectl **cordon** NODE [options] : Mark node as unschedulable.
+* uncordon : kubectl **uncordon** NODE [options] : Mark node as schedulable.
+* cp : kubectl cp <file-spec-src> <file-spec-dest> [options] : Copy files and directories from to containers.
+* **create** : kubectl **create** -f FILENAME [flags] : Create resources from file or stdin
+* **delete** : kubectl **delete** (-f FILENAME | TYPE) -l label [flags]: Delete resources from file or stdin or/and label selectors, names, resource selectors, resource id.
+* **describe** : kubectl **describe** (-f FILENAME | TYPE) -l label [flags]: Display detailed states of one or more resources.
+* **diff** : kubectl **diff** -f FILENAME [flags]: Diff file or stdin against live configuration.
+* **drain** : kubectl **drain** NODE [options]: Drain node in prepartion of maintenance.
+* **edit** :  kubectl **edit** (-f FILENAME | TYPE) [flags] : Edit and update the definition of resources on the serveur by using the default editor.
+* **events** : kubectl **events** : List events.
+* **exec** : kubectl **exec** POD [-c CONTAINER] [-i] [-t] [flags] [--COMMAND] [args...] : Execute a command against a container in a POD.
+* explain : kubectl **explain** TYPE [--recursive=false] [flags] : Get documentations of various resources. For instance pods, nodes, services etc.
+* **expose** : kubectl **expose** (-f FILENAME | TYPE) --port=PORT --protocole=TCP|UDP --target-port=NAME|PORT --name=NAME --extarnal-ip=IP --type=TYPE [flags] : Expose a replication controller, service, or pod as a new k8s service.
+* **get** : kubectl get (-f FILENAME | TYPE) [--watch] [--sort-by=FIELD] [-o=OUTPUT_FORMAT] [flags] : List resources.
+* kustomize : kubectl **kustomize** <dir> [flags] [options] : List a set of API resources generated from kustomization.yaml instruction file.
+* **label** : kubectl **label** (-f FILENAME | TYPE) K0=V0 K1=V1.. [--overwrite] [--all] [--resource-version=VX] [flags]: Add or update the labels of n resources.
+* **logs** : kubectl **logs** POD [-c CONTAINER] [--follow] [flags] : Print the logs for a container in a pod or specified resource. If the pod has only one container, the container name is optional.
+* **options** : kubectl **options** : List of global command-line options, witch apply to all commands.
+* patch : kubectl **patch** (-f FILENAME | TYPE) --patch PATCH [flags] : Update fields of a resource using strategic merge patch, a JSON merge patch, or a JSON patch..
+* plugin : kubectl **plugin** [flags] [options] : Provides utilities for interacting with plugins.
+* port-forward : kubectl ***port-forward** POD [LOCAL_PORT:] REMOTE_PORT [...[LOCAL_PORT_N:]REMOTE_PORT_N] [flags]: Forward one or more local ports to a pod.
+* proxy : kubectl **proxy** [--port=PORT] [--www=static-dir] [--www-prefix=prefix] [api--prefix=prefix] [flags] : Creates a proxy server or application-level gateway between localhost and the Kubernetes API server. It also allows serving static content over specified HTTP path. All incoming data enters through one port and gets forwarded to the remote Kubernetes API server port, except for the path matching the static content path.
+* replace : kubectl **replace** -f FILENAME : Replace a resource from a file or stdin.
+* rollout : kubectl **rollout** SUBCOMMAND [options] : Manage the rollout of a resource like deployments, daemonsets and statefulsets.
+* **run** : kubectl **run** NAME --image=image [--env="K=V"] [--port=PORT] [--dry-run=server|client|none] [--overrides=inline-json] [flags] : Run a specified image on the cluster.
+* **scale** : kubectl **scale** (-f FILENAME | TYPE) --replicas=COUNT [--resource-version=VERSION] [--current-replicas=count] [flags] : Set a new size for a deployment, replica set, replication controller, or stateful set.
+* set : kubectl **set** SUBCOMMAND [options] : Configure application resource.
+* taint : kubectl **taint** NODE NAME K0=V0:T0 K1=V1:T1 [options] : Update the taints on one or more nodes. Ex Add a taint with key 'dedicated' on nodes having label myLabel=X :
+kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
+* **top** : kubectl **top** (POD | NODE) [flags] [options] : Display CPU/MEM/Storage usage for a pod or node.
+- version : kubectl **version** [--client] [flags] : Display the kubernetes version running on the client and server.
+* wait : kubectl **wait** ([-f FILENAME] | resource.group/resource.name | resource.group [(-l label | --all)]) [--for=delete|--for condition=available] [options] : Experimental: Wait for a specific condition on one or many resources.
+
+</details>
+
+<details> <summary>RESSOURCE TYPE </summary>
+
+* bindings : Binding
+* componentstatuses - **cs** : ComponentStatus
+* **configmaps - cm** : ConfigMap
+* endpoints - **ep** : Endpoints
+* events - **ev** (events) : Event
+* limitranges - **limits** : LimitRange
+* namespaces - **ns** : Namespace
+* **nodes - no** : Node
+* persistantvolumeclaims - **pvc** : PersistantVolumeClaim
+* **persistantvolumes - pv** : PersistantVolume
+* **pods - po** : Pod
+* podtemplates : PodTemplate
+* replicationcontrollers - **rc** : ReplicationController
+* resourcequotas - **quota** : ResourceQuotas
+* **secrets** : Secret
+* serviveaccounts - sa : ServiceAccount
+* services - **svc** : Service
+* customeresourcedefinitions - **crd**, cdrs (apiextensions) : CustomResourceDefinition
+* apiservices (apiregistration) : APIService
+* controllerrevisions (apps) : ControllerRevision
+* **daemonset - ds** (apps) : DaemonSet
+* **deployments - deploy** (apps) : Deployment
+* **replicasets - rs** (apps) : ReplicaSet
+* **statefulsets - sts** (apps) : StatefulSet
+* tokenreviews (authentication) : TokenReview
+* [local|self|-]subject[access|rule]reviews (authorization) : *Subject*Review
+* horizontalpodautoscalers - **hpa** (autoscalling) : HorizontalPodAutoscaler
+* cronjobs - **cj** (batch) : CronJob
+* **jobs** (batch) : Job
+* certificatesigningrequests - **csr** (certificates) : CertificateSigningRequest
+* flowschemas (flowcontrol) : FlowSchema
+* ingressclasses (networking) : IngressClass
+* **ingress - ing** (networking) : Ingress
+* networkpolicies - **netpol** (networking) : NetworkPolicies
+* runtimeclasses (node) : RuntimeClass
+* poddisruptionbudgets - **pdb** (policy) : PodDisruptionBudget
+* podsecuritypolicies - **psp** (policy) : PodSecurityPolicy
+* clusterrolebindings (rbac) : ClusterRoleBiding
+* clusterroles (rbac) : ClusterRole
+* roles (rbac) : RoleBinding
+* priorityclasses - **pc** (sheduling) : PriorityClass
+* csidrivers (storage) : CSIDriver
+* csinodes (storage) : CSIStorageCapacity
+* storageclasses - **sc** (storage) : StorageClass
+* volumeattachements (storage) : VolumeAttachement  
+
+</details>
 
 
-
-* ex
 
 ```bash
 kubectl get pods pod1
 ```
+
+* check **Kind** with **kubectl** :
+
+```bash
+kind delete cluster
+kind create cluster
+kubectl get pods
+  No resources found in default namespace.
+kubectl cluster-info
+  Kubernetes control plane is running at https://127.0.0.1:36447
+  CoreDNS is running at https://127.0.0.1:36447/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+* check url in the browser (allow exeption)
+  * https://127.0.0.1:XXXX
+  * https://127.0.0.1:XXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+
+```bash
+docker ps
+  CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
+  8c5b3017face   kindest/node:v1.34.0   "/usr/local/bin/entr…"   26 minutes ago   Up 25 minutes   127.0.0.1:36447->6443/tcp   kind-control-plane
+```
+
+```bash
+kubectl get ns
+  NAME                 STATUS   AGE
+  default              Active   25m
+  kube-node-lease      Active   25m
+  kube-public          Active   25m
+  kube-system          Active   25m
+  local-path-storage   Active   25m
+```
+
+### [Ingress 4 Kind](https://kind.sigs.k8s.io/docs/user/ingress/) | [4 k8s](https://kubernetes.io/docs/concepts/services-networking/ingress/ ) | [ 4 k8s & flask ](https://github.com/SamanBarahoie/IngressFlask/tree/main/k8s)
+
+* re-create cluster
+
+```bash
+
+kind delete cluster
+
+cat <<EOF | kind create cluster --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+EOF
+  Creating cluster "kind" ...
+  ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+  ✓ Preparing nodes 📦
+  ✓ Writing configuration 📜
+  ✓ Starting control-plane 🕹️
+  ✓ Installing CNI 🔌
+  ✓ Installing StorageClass 💾
+  Set kubectl context to "kind-kind"
+  You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind
+
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+```
+
+* check mapping
+
+```bash
+docker ps # check mapping 80->80 443->443 38275->6443
+CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
+685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
+```
+
+* deploy our pod
+
+```bash
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+  namespace/ingress-nginx created # our namspace created
+  serviceaccount/ingress-nginx created
+  serviceaccount/ingress-nginx-admission created
+  role.rbac.authorization.k8s.io/ingress-nginx created
+  role.rbac.authorization.k8s.io/ingress-nginx-admission created
+  clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+  clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+  rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+  rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+  clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+  clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+  configmap/ingress-nginx-controller created
+  service/ingress-nginx-controller created
+  service/ingress-nginx-controller-admission created
+  deployment.apps/ingress-nginx-controller created
+  job.batch/ingress-nginx-admission-create created
+  job.batch/ingress-nginx-admission-patch created
+  ingressclass.networking.k8s.io/nginx created
+  validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+docker ps
+  CONTAINER ID   IMAGE                  COMMAND                  CREATED              STATUS              PORTS                                                                 NAMES
+  685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   About a minute ago   Up About a minute   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
+kubectl cluster-info
+  Kubernetes control plane is running at https://127.0.0.1:38275
+  CoreDNS is running at https://127.0.0.1:38275/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+* check pod in our name space
+
+```bash
+kubectl get pods -n ingress-nginx 
+  NAME                                        READY   STATUS      RESTARTS   AGE
+  ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
+  ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
+  ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
+```
+
+### configuration of ingress
+
+* Copy kubernetes Ingress 
+https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+
+* into k8s/deploy.yam
+* change app name fron nginx to python-app for example
+* extend app name modification in spec selector and template
+* set replicas to 1 for the démo
+* change container name as well
+* use our image from our dockerhub account (luspokvenus/python-app v2)
+
+```bash
+vim k8s/deploy.yaml
+```
+
+[result](k8s/deploy.yaml)

@@ -1,0 +1,5 @@
+code/Exp1/api/logs/
+code/Exp1/api/cron.log
+.env
+.github/.env
+flask_env
