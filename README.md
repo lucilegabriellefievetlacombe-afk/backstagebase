@@ -693,7 +693,7 @@ kubectl get deployments
 
 ### Create k8s Services
 
-how do we access our deployed applicatiob via broswer ?
+how do we access our deployed application via broswer ?
 
 * copy definig a service
 https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
@@ -715,7 +715,7 @@ spec:
 
 * copy it inside k8s/service.yaml
 * change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
-* set the source port (port forwarded exposed) and the container target port (container port)
+* set the host "source" port (port forwarded exposed from we look on host) and the container target port (container port to reach)
 
 ```bash
 vim k8s/service.yaml
@@ -762,3 +762,90 @@ kubectl describe svc python-app
 ```
 
 ### Expose the application
+
+* copy definig a ingress resource sample
+https://kind.sigs.k8s.io/docs/user/ingress/
+https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
+```
+
+* copy it inside k8s/ingress.yaml
+* change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
+* check ingressClassName with kubectl get ingressclassname (not really necessary because we have just one - can remove this line) 
+* set the host "source" port (port forwarded exposed), check in service.yaml  targetPort
+* set the host at "python-app.test.com"
+
+
+```bash
+kubectl get ingressclass
+  NAME    CONTROLLER             PARAMETERS   AGE
+  nginx   k8s.io/ingress-nginx   <none>       23h
+# it is nginx
+vim k8s/ingress.yaml
+```
+
+our [k8s/ingress.yaml](k8s/ingress.yaml)
+
+* edit [etc/hosts](/Windows/System32/drivers/etc/hosts) as admin (ex blocnotes), add our host at the end
+
+```txt
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+...
+127.0.0.1 python-app.test.com
+```
+
+* save the /etc/hosts
+
+* apply k8s/ingress.yaml
+
+```bash
+kubectl apply -f k8s/ingress.yaml
+  ingress.networking.k8s.io/python-app created
+```
+
+* check our ingress 
+
+```bash
+kubectl get ing
+NAME         CLASS   HOSTS                 ADDRESS   PORTS   AGE
+python-app   nginx   python-app.test.com             80      18s
+```
+
+* check our apllication
+* **it is created on port 80, and visible in our host browser at http://python-app.test.com/**
+
+### Clean k8s hand made ingress, service and deployment
+
+```bash
+cd k8s
+k8s$ kubectl delete -f ingress.yaml
+  ingress.networking.k8s.io "python-app" deleted from default namespace
+k8s$ kubectl delete -f service.yaml
+  service "python-app" deleted from default namespace
+k8s$ kubectl delete -f deploy.yaml
+  eployment.apps "python-app" deleted from default namespace
+```
+
+## Helm
+
