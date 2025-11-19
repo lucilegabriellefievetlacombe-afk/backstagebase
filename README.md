@@ -412,12 +412,12 @@ kubectl [command] [RESOURCE TYPE] [NAME] [flags]
 * annotate : kubectcl **annotate** (-f FILENAME | TYPE) K0=V0 K1=V1.. [--overwrite] [--all] [--resource-version=VX] [flags] : Add or update the annotations of n resources.
 * api-resources : kubectl **api-resource** [flags] : List available API resources.
 * api-versions : kubectl **api-versions** [flags] : List available API versions.
-* apply : kubectl **apply** -f FILENAME [flags] : Apply configuration from a file or stin
+* **apply** : kubectl **apply** -f FILENAME [flags] : Apply configuration from a file or stin
 * attach : kubectl **attach** POD -c CONTAINER [-i] [-t] [falgs] : Attach to a running container stdin.
 * auth : kubectl **auth** [flags] [options] : Inspect authorization.
-* autoscale : kubectl **autoscale** (-f FILENAME | TYPE) [--min|max=NBPODS] [--cpu-percent=CPU] [flags] : Automatically scale the set of pods that are managed by a replication controller.
+* **autoscale** : kubectl **autoscale** (-f FILENAME | TYPE) [--min|max=NBPODS] [--cpu-percent=CPU] [flags] : Automatically scale the set of pods that are managed by a replication controller.
 * certificate : kubectl **certificate** SUBCOMMAND [options] : Modify certificate resource.
-* cluster-info : kubectl **cluster-info** [flags] : Display endpoint informations of master and srvices in the cluster.
+* **cluster-info** : kubectl **cluster-info** [flags] : Display endpoint informations of master and srvices in the cluster.
 * completion : kubectl **completion** SHELL [options] : Output shell completion code for the specified shell (bash or zsh).
 * config : kubectl **config** SUBCOMMAND [flags] : Modify kube config files.
 * cordon : kubectl **cordon** NODE [options] : Mark node as unschedulable.
@@ -443,7 +443,7 @@ kubectl [command] [RESOURCE TYPE] [NAME] [flags]
 * port-forward : kubectl ***port-forward** POD [LOCAL_PORT:] REMOTE_PORT [...[LOCAL_PORT_N:]REMOTE_PORT_N] [flags]: Forward one or more local ports to a pod.
 * proxy : kubectl **proxy** [--port=PORT] [--www=static-dir] [--www-prefix=prefix] [api--prefix=prefix] [flags] : Creates a proxy server or application-level gateway between localhost and the Kubernetes API server. It also allows serving static content over specified HTTP path. All incoming data enters through one port and gets forwarded to the remote Kubernetes API server port, except for the path matching the static content path.
 * replace : kubectl **replace** -f FILENAME : Replace a resource from a file or stdin.
-* rollout : kubectl **rollout** SUBCOMMAND [options] : Manage the rollout of a resource like deployments, daemonsets and statefulsets.
+* **rollout** : kubectl **rollout** SUBCOMMAND [options] : Manage the rollout of a resource like deployments, daemonsets and statefulsets.
 * **run** : kubectl **run** NAME --image=image [--env="K=V"] [--port=PORT] [--dry-run=server|client|none] [--overrides=inline-json] [flags] : Run a specified image on the cluster.
 * **scale** : kubectl **scale** (-f FILENAME | TYPE) --replicas=COUNT [--resource-version=VERSION] [--current-replicas=count] [flags] : Set a new size for a deployment, replica set, replication controller, or stateful set.
 * set : kubectl **set** SUBCOMMAND [options] : Configure application resource.
@@ -473,7 +473,7 @@ kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
 * resourcequotas - **quota** : ResourceQuotas
 * **secrets** : Secret
 * serviveaccounts - sa : ServiceAccount
-* services - **svc** : Service
+* **services - svc** : Service
 * customeresourcedefinitions - **crd**, cdrs (apiextensions) : CustomResourceDefinition
 * apiservices (apiregistration) : APIService
 * controllerrevisions (apps) : ControllerRevision
@@ -483,7 +483,7 @@ kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
 * **statefulsets - sts** (apps) : StatefulSet
 * tokenreviews (authentication) : TokenReview
 * [local|self|-]subject[access|rule]reviews (authorization) : *Subject*Review
-* horizontalpodautoscalers - **hpa** (autoscalling) : HorizontalPodAutoscaler
+* **horizontalpodautoscalers - hpa** (autoscalling) : HorizontalPodAutoscaler
 * cronjobs - **cj** (batch) : CronJob
 * **jobs** (batch) : Job
 * certificatesigningrequests - **csr** (certificates) : CertificateSigningRequest
@@ -496,7 +496,7 @@ kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
 * podsecuritypolicies - **psp** (policy) : PodSecurityPolicy
 * clusterrolebindings (rbac) : ClusterRoleBiding
 * clusterroles (rbac) : ClusterRole
-* roles (rbac) : RoleBinding
+* **roles** (rbac) : RoleBinding
 * priorityclasses - **pc** (sheduling) : PriorityClass
 * csidrivers (storage) : CSIDriver
 * csinodes (storage) : CSIStorageCapacity
@@ -849,3 +849,72 @@ k8s$ kubectl delete -f deploy.yaml
 
 ## Helm
 
+### Helm Installation
+
+* https://github.com/helm/helm/releases checksum
+* https://helm.sh/docs/intro/install/#from-apt-debianubuntu
+
+```bash
+sudo apt-get install curl gpg apt-transport-https --yes
+  curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+  echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+  sudo apt-get update
+  sudo apt-get install helm
+....
+helm version
+  version.BuildInfo{Version:"v3.19.2", GitCommit:"8766e718a0119851f10ddbe4577593a45fadf544", GitTreeState:"clean", GoVersion:"go1.24.9"}
+```
+
+### create our Chart under wls2 ubuntu
+
+```bash
+mkdir charts; cd charts
+charts$ helm create python-app-wsl2
+  Creating python-app-wsl2
+```
+
+It created a directory with a charts directory, it is our charts.
+
+```bash
+charts$ cd python-app-wsl2
+charts/python-app-wsl2$ ls
+  Chart.yaml  charts  templates  values.yaml
+```
+
+* we remove charts folder and .helmignore, we won't use yet
+
+```bash
+charts/python-app-wsl2$ rm -rf charts/ .helmignore
+charts/python-app-wsl2$ ls
+  Chart.yaml  templates  values.yaml
+```
+
+* we need the three files Chart.yaml  templates  values.yaml
+* we look the template directory
+
+```bash
+charts/python-app-wsl2/templates$ ls -al
+  total 24
+  drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
+  drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
+  -rwxrwxrwx 1 lucile lucile 2850 Nov 19 15:11 NOTES.txt
+  -rwxrwxrwx 1 lucile lucile 1862 Nov 19 15:11 _helpers.tpl
+  -rwxrwxrwx 1 lucile lucile 2420 Nov 19 15:11 deployment.yaml
+  -rwxrwxrwx 1 lucile lucile 1015 Nov 19 15:11 hpa.yaml
+  -rwxrwxrwx 1 lucile lucile  969 Nov 19 15:11 httproute.yaml
+  -rwxrwxrwx 1 lucile lucile 1112 Nov 19 15:11 ingress.yaml
+  -rwxrwxrwx 1 lucile lucile  385 Nov 19 15:11 service.yaml
+  -rwxrwxrwx 1 lucile lucile  405 Nov 19 15:11 serviceaccount.yaml
+  drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
+```
+
+* we remove tests, hpa.yml, httproute.yaml and the serviceaccount.yaml we don't need for the moment.
+
+```bash
+charts/python-app-wsl2/templates$ rm -rf tests/ hpa.yaml httproute.yaml serviceaccount.yaml
+charts/python-app-wsl2/templates$ ls -a
+.  ..  NOTES.txt  _helpers.tpl  deployment.yaml ingress.yaml  service.yaml
+```
+
+* we have the same sort of configuration we did in k8s
+  
