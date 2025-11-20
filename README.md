@@ -61,13 +61,17 @@
 : **Tool** that can help you **create Components** inside Backstage. By default, it has the ability to **load skeletons of code**, template in some **variables**, and then **publish** the template to some locations like GitHub or GitLab.
 
 **CD**
-: Continuous Deployment
+: Continuous Delivery||Deployment, CD refers to the practice of continuous delivery and/or continuous deployment software. Both are about automating further stages of the pipeline.
+    * **Continuous delivery** automates the release of validated code to a repository following the automation of builds and unit and integration testing in CI.
+    * **Continuous deployment** is an extension of continuous delivery, and can refer to automating the release of a developer’s changes from the repository to production, where it is usable by customers. It can concern development and testing envronnements.
+    * A **multi-env-branches gitflow** pipeline can use continuous deployment for developpement feature or fix branches, for QA integration branch and PPD future release branch and then use either continuous delivery or deployment for production.
+    * **CD features&fix DEV > CD integration QA > CD version-X.X.X PPD > CD PROD**
 
 **CI**
-: Continuous Integration
+: Continuous Integration, CI always refers to continuous integration, an automation process for developers that facilitates more frequent merging of code changes back to a shared branch, or “trunk.” As these updates are made, automated testing steps are triggered to ensure the reliability of merged code changes.
 
 **DevOps**
-: Mouvement en ingénierie informatique et une pratique technique visant à l'unification du développement logiciel (dev) et de l'administration des infrastructures informatiques (ops), notamment l'administration système.
+: DevOps is a set of practices, tools, and a cultural philosophy that integrates and automates the work of software development (Dev) and IT operations (Ops) to improve and shorten the systems development life cycle. It emphasizes team empowerment, cross-team communication, collaboration, and technology automation.
 
 **Docker**
 : Docker is a platform designed to help developers build, share, and run container applications. We handle the tedious setup, so you can focus on the code.
@@ -917,4 +921,69 @@ charts/python-app-wsl2/templates$ ls -a
 ```
 
 * we have the same sort of configuration we did in k8s
-  
+* we adapt the values to the k8s template
+
+* change image repository: luspokvenus/python-app
+* change image appVersion: tag: "v2"
+* change service ports: 5000 (because they assume container target is identical to host source port in the deployment templates)
+* change ingress: enabled: true
+* check ingressClassName with kubectl get ingressclassname (not really necessary because we have just one - can remove this line) 
+* set the ingress hosts host at "python-app.test.com"
+* set the ingress hosts pathType at Prefix
+* set tge serviceAccount create at false
+* set resources requests cpu and memory at 50m
+* remove httpRoutes 
+* config livenessProbe paths at /api/v1/healthz
+
+
+```bash
+cd charts/python-app-wsl2
+# get className of ingress
+kubectl get ingressclass
+  NAME    CONTROLLER             PARAMETERS   AGE
+  nginx   k8s.io/ingress-nginx   <none>       23h
+# it is nginx
+charts/python-app-wsl2$ vim values.yaml
+```
+
+our [charts/python-app-wsl2/values.yaml](charts/python-app-wsl2/values.yaml)
+
+```bash
+charts/python-app-wsl2$ helm install python-app-wsl2 -n python .
+  Error: INSTALLATION FAILED: template: python-app-wsl2/templates/NOTES.txt:2:14: executing "python-app-wsl2/templates/NOTES.txt" at <.Values.httpRoute.enabled>: nil pointer evaluating interface {}.enabled
+charts/python-app-wsl2$ vim templates/NOTES.txt # remove all httpRoute stuff 
+
+# need to create python namespace 
+charts/python-app-wsl2$ kubectl get ns
+NAME                 STATUS   AGE
+default              Active   9h
+ingress-nginx        Active   9h
+kube-node-lease      Active   9h
+kube-public          Active   9h
+kube-system          Active   9h
+local-path-storage   Active   9h
+
+helm install python-app-wsl2 --create-namespace -n python .
+  I1119 23:29:38.852706    4138 warnings.go:110] "Warning: spec.template.spec.containers[0].resources.requests[memory]: fractional byte value \"50m\" is invalid, must be an integer"
+  NAME: python-app-wsl2
+  LAST DEPLOYED: Wed Nov 19 23:29:38 2025
+  NAMESPACE: python
+  STATUS: deployed
+  REVISION: 1
+  TEST SUITE: None
+  NOTES:
+  1. Get the application URL by running these commands:
+    http://python-app.test.com/
+
+# got python name space now
+charts/python-app-wsl2$ kubectl get ns
+  NAME                 STATUS   AGE
+  default              Active   9h
+  ingress-nginx        Active   9h
+  kube-node-lease      Active   9h
+  kube-public          Active   9h
+  kube-system          Active   9h
+  local-path-storage   Active   9h
+  python               Active   3m30s
+
+  ```
