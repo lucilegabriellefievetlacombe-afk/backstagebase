@@ -2,9 +2,7 @@ replicaCount: 1
 
 image:
   repository: luspokvenus/python-app
-  # This sets the pull policy for images.
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: "v2"
 
 imagePullSecrets: []
@@ -18,18 +16,12 @@ serviceAccount:
   name: ""
 
 podAnnotations: {}
+
 podLabels: {}
 
 podSecurityContext: {}
-  # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -39,17 +31,12 @@ ingress:
   enabled: true
   className: "nginx"
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
+    - host: python-app.test.com
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
 
 httpRoute:
   enabled: false
@@ -59,43 +46,25 @@ httpRoute:
     sectionName: http
     # namespace: default
   hostnames:
-  - chart-example.local
+  - python-app.test.com
   rules:
   - matches:
     - path:
         type: PathPrefix
         value: /headers
-  #   filters:
-  #   - type: RequestHeaderModifier
-  #     requestHeaderModifier:
-  #       set:
-  #       - name: My-Overwrite-Header
-  #         value: this-is-the-only-value
-  #       remove:
-  #       - User-Agent
-  # - matches:
-  #   - path:
-  #       type: PathPrefix
-  #       value: /echo
-  #     headers:
-  #     - name: version
-  #       value: v2
 
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  requests:
+    cpu: 50m
+    memory: 50Mi
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /api/v1/healthz
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /api/v1/healthz
     port: http
 
 autoscaling:
@@ -103,21 +72,9 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 volumes: []
-  # - name: foo
-  #   secret:
-  #     secretName: mysecret
-  #     optional: false
-
 volumeMounts: []
-  # - name: foo
-  #   mountPath: "/etc/foo"
-  #   readOnly: true
-
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}

@@ -5,6 +5,44 @@
 
 ## Glossary
 
+**IDP**
+: **I**nternal **D**eveloper **P**latform
+
+**Backstage**
+: CNF open-source **Platform Engineering framework** developed by **Spotify**, and integrating it with modern **DevOps tools** to build a fully functional **Internal Developer Platform**(IDP)
+
+**Docker File**
+: A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image.
+
+**Docker Containers**
+: A Docker container is a lightweight, standalone, and executable unit of software that encapsulates an application along with all its dependencies, such as libraries, runtime, system tools, and configurations.
+
+**Kubernetes - k8s**
+: Open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications. Originally developed by Google, it has become the de-facto standard for running containers at scale.
+
+**Kind**
+: kind is a tool for running local Kubernetes clusters using Docker container "nodes". kind was primarily designed for testing Kubernetes itself, but may be used for local development or CI.
+
+**kubectl**
+: **Command line tool** for communicating with a **Kubernetes cluster's control plane**, using the Kubernetes API.
+
+**Helm**
+: Helm is a **package manager for Kubernetes** that simplifies the deployment and management of applications within Kubernetes clusters. It bundles Kubernetes resources into a single Helm chart.
+
+**Helm Chart**
+: Reusable package which includes all necessary code and resources needed to deploy an application.
+
+**ArgoCD**
+: Argo CD is a **declarative, GitOps continuous delivery tool for Kubernetes**.
+
+**Ingress Controller**
+: Component in Kubernetes that manages external access to services within a cluster, typically through HTTP and HTTPS. It is responsible for fulfilling the Ingress resource, which defines rules for routing traffic to different services based on the request's host and path. Common ingress controllers include NGINX and Traefik, and they often work with load balancers to handle incoming traffic effectively.
+
+**Flask API**
+: Flask API is primarily built using the Flask framework, a lightweight and flexible **micro-framework for Python**. Flask itself was created by Armin Ronacher as part of the Pallets Projects.
+
+<details> <summary>Glossary</summary>
+
 **ArgoCD**
 : Argo CD is a **declarative, GitOps continuous delivery tool for Kubernetes**.
 
@@ -53,7 +91,6 @@
 **Backstage Search**
 : Backstage Search lets you find the right information you are looking for in the Backstage ecosystem.
 
-
 **Backstage TechDocs**
 : Spotify’s homegrown docs-like-code solution built directly into Backstage. Engineers write their documentation in **Markdown** files which live together with their **code** - and with little configuration get a nice-looking doc site in Backstage.
 
@@ -62,6 +99,7 @@
 
 **CD**
 : Continuous Delivery||Deployment, CD refers to the practice of continuous delivery and/or continuous deployment software. Both are about automating further stages of the pipeline.
+
     * **Continuous delivery** automates the release of validated code to a repository following the automation of builds and unit and integration testing in CI.
     * **Continuous deployment** is an extension of continuous delivery, and can refer to automating the release of a developer’s changes from the repository to production, where it is usable by customers. It can concern development and testing envronnements.
     * A **multi-env-branches gitflow** pipeline can use continuous deployment for developpement feature or fix branches, for QA integration branch and PPD future release branch and then use either continuous delivery or deployment for production.
@@ -114,6 +152,7 @@
 
 **Kubernetes local Cluster**
 : A Kubernetes cluster is a **collection of machines (nodes) designed to run containerized applications**. It is the core of Kubernetes' functionality, *enabling the orchestration, scaling, and management of containers* across multiple machines, whether they are physical, virtual, on-premises, or in the cloud.
+
    * **Control Plane**: This is the **brain of the cluster**, responsible for **managing the desired state** of the **system**. It includes: 
         * **kube-apiserver**: Exposes the Kubernetes API for communication. 
         * **etcd**: A key-value store for cluster data persistence.
@@ -159,18 +198,18 @@ and integrate systems more effectively
 **YAML**
 : YAML (YAML Ain't Markup Language) is a human-readable data serialization language commonly used for configuration files and data exchange between languages with different data structures. It is designed to be easy to read and write, making it a popular choice for configuration files and data serialization.
 
+</details>
+
 [Ricardo Andrea Gonzalez Gomez](https://squad.udemy.com/user/ricardo-andre-gonzalez-gomez/)
+
 * DevOps Engineer & SysAdmin.
-
 * Cloud Architect & Linux Specialist.
-
 * Red Hat Certified Engineer.
-
 * Red Hat Certified System Administrator.
 
 ## Intro
 
-This course requires you to download docker from the official Docker Repositories as well as images from Docker Hub. If you are a Udemy Business user, please check with your employer before downloading software.
+Ricardo Andrea Gonzalez Gomez course requires you to download docker from the official Docker Repositories as well as images from Docker Hub. If you are a Udemy Business user, please check with your employer before downloading software.
 
 Are you a DevOps engineer looking to take your career to the next level? Are you curious about Platform Engineering and how **Internal Developer Portals (IDPs)** can revolutionize the way teams develop, deploy, and manage applications? If so, this course is designed for you!
 
@@ -178,17 +217,17 @@ This course will take you from DevOps to Platform Engineering by mastering Backs
 
 In this hands-on, project-based course, you will work on real-world DevOps projects, implementing automation and self-service workflows to streamline software delivery. By the end of this course, you will have gained practical experience in:
 
-* Building and deploying applications using Docker, Kubernetes, and ArgoCD
+* Building and deploying applications using **Docker**, **Kubernetes**, and **ArgoCD**
 
-* Automating CI/CD pipelines with GitHub Actions
+* Automating **CI/CD pipelines with GitHub Actions**
 
-* Creating an Internal Developer Platform (IDP) using Backstage
+* Creating an **Internal Developer Platform (IDP) using Backstage**
 
-* Writing Documentation as Code with Backstage TechDocs
+* Writing Documentation as Code with **Backstage TechDocs**
 
-* Implementing Software Templates for faster application deployments
+* Implementing **Software Templates** for faster application deployments
 
-* Deploying Backstage in a production environment
+* **Deploying Backstage in a production environment**
 
 This course is practical, hands-on, and beginner-friendly, ensuring that you learn by doing rather than just theory. No prior Platform Engineering experience is required, but a basic understanding of DevOps, CI/CD, and infrastructure management will be beneficial.
 
@@ -202,7 +241,7 @@ Join now and get ahead in the future of DevOps & Platform Engineering!
 
 * docker is working
 * pyhon 3 and pip are working
-* we create a project repository on github
+* we have an account on github
 
 ### Steps
 
@@ -222,13 +261,28 @@ Join now and get ahead in the future of DevOps & Platform Engineering!
 
 https://github.com/ricardoandre97/python-app
 
+### writing Dockerfile
 
-  
-### writing code
+```dockerfile
+
+FROM python:3.11-alpine
+
+COPY requirements.txt /tmp
+
+RUN pip install -r /tmp/requirements.txt
+
+COPY ./src /src
+
+CMD python /src/app.py
+
+```
+
+### writing code in src/app.py
 
 using flask, jsonify, datetime, socket
 
 ```python
+
 from flask import Flask, jsonify
 import datetime
 import socket
@@ -251,6 +305,7 @@ if __name__ == '__main__':
 ### debug
 
 ```bash
+
 $ python src/app.py # works on localhost:5000
 $ docker build -t python-app:v1 .
 $ docker images
@@ -259,16 +314,19 @@ $ docker ps
 $ docker exec -ti 68c20a82c9db sh # try on localhost:8080, doesn't work
 / # apk add curl
 / # curl http://localhost:5000
-always ok
+# always ok
 / # ip a
 ...
 inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
 / # curl http://172.17.0.2:5000 # works with app.run(host="0.0.0.0")
 ```
 
-### fix
+* open host brower on http://172.17.0.2:5000, should work
+
+### fix host filter, allow all
 
 ```python
+
 if __name__ == '__main__':
     # app.run() # works with python only
     app.run(host="0.0.0.0") # works with docker and python
@@ -277,6 +335,7 @@ if __name__ == '__main__':
 ### rebuild v2
 
 ```bash
+
 $ python src/app.py # works on localhost:5000 and docker with app.run(host="0.0.0.0")
 $ docker build -t python-app:v2 .
 $ docker images
@@ -312,9 +371,9 @@ docker build --platform linux/amd64 -t ${TheLogin}/getting-started .
 docker push ${TheLogin}/pyhton-app
 ```
 
-## Kubernetes local Cluster
+## 1 - Get Kind our Kubernetes Local Cluster
 
-### install kind on wsl2 linux
+### Install Kind on WSL2 linux Ubuntu
 
 * get in [wsl2](https://kind.sigs.k8s.io/docs/user/using-wsl2/)
 * check architecture
@@ -384,7 +443,7 @@ kind create cluster
 kind delete cluster
 ```
 
-## kubectl control plane command line
+## 2 - Get kubectl control plane command line
 
 ### Install
 
@@ -509,7 +568,7 @@ kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
 
 </details>
 
-
+* check kubectl
 
 ```bash
 kubectl get pods pod1
@@ -552,7 +611,7 @@ kubectl get ns
 
 ### [Ingress 4 Kind](https://kind.sigs.k8s.io/docs/user/ingress/) | [4 k8s](https://kubernetes.io/docs/concepts/services-networking/ingress/ ) | [ 4 k8s & flask ](https://github.com/SamanBarahoie/IngressFlask/tree/main/k8s)
 
-* re-create cluster
+## 3 - Create our local cluster with Kind
 
 ```bash
 
@@ -586,7 +645,7 @@ kubectl cluster-info --context kind-kind
 Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
 ```
 
-* check mapping
+* Check kindest/node mapping
 
 ```bash
 docker ps # check mapping 80->80 443->443 38275->6443
@@ -594,7 +653,7 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED       STA
 685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
 ```
 
-* deploy our pod
+## 4 - Deploy our nginx pod
 
 ```bash
 kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
@@ -617,17 +676,22 @@ kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.
   job.batch/ingress-nginx-admission-patch created
   ingressclass.networking.k8s.io/nginx created
   validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
-docker ps
-  CONTAINER ID   IMAGE                  COMMAND                  CREATED              STATUS              PORTS                                                                 NAMES
-  685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   About a minute ago   Up About a minute   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
+```
+
+* Check kindest/node mapping
+
+* Check cluster info
+
+```bash
 kubectl cluster-info
-  Kubernetes control plane is running at https://127.0.0.1:38275
-  CoreDNS is running at https://127.0.0.1:38275/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+  Kubernetes control plane is running at https://127.0.0.1:XXXXX
+  CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-* check pod in our name space
+* Check pods in ingress-nginx name space
+* Check ingress nginx controller is running
 
 ```bash
 kubectl get pods -n ingress-nginx 
@@ -637,7 +701,7 @@ kubectl get pods -n ingress-nginx
   ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
 ```
 
-### configuration of ingress
+## 5 - Configuration of ingress
 
 * Copy kubernetes Ingress 
 https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend
@@ -695,7 +759,7 @@ kubectl get deployments
   python-app   1/1     1            1           101s
 ```
 
-### Create k8s Services
+## 6 - Create k8s Services
 
 how do we access our deployed application via broswer ?
 
@@ -765,7 +829,7 @@ kubectl describe svc python-app
   Events:                   <none>
 ```
 
-### Expose the application
+## 7 - Expose the application
 
 * copy definig a ingress resource sample
 https://kind.sigs.k8s.io/docs/user/ingress/
@@ -839,7 +903,7 @@ python-app   nginx   python-app.test.com             80      18s
 * check our apllication
 * **it is created on port 80, and visible in our host browser at http://python-app.test.com/**
 
-### Clean k8s hand made ingress, service and deployment
+## Clean k8s hand made ingress, service and deployment
 
 ```bash
 cd k8s
@@ -848,12 +912,60 @@ k8s$ kubectl delete -f ingress.yaml
 k8s$ kubectl delete -f service.yaml
   service "python-app" deleted from default namespace
 k8s$ kubectl delete -f deploy.yaml
-  eployment.apps "python-app" deleted from default namespace
+  deployment.apps "python-app" deleted from default namespace
+cd ..
 ```
 
-## Helm
+# Helm
 
-### Helm Installation
+### pre-requisites
+
+* we are looged in docker hub
+
+```bash 
+docker login -u luspokvenus
+```
+
+* k8s resources set applied with files are deleted
+
+```bash
+kubectl delete -f k8s/ingress.yaml -f k8s/service.yaml -f k8s/deploy.yaml
+  ingress.networking.k8s.io "python-app" deleted from default namespace
+  service "python-app" deleted from default namespace
+  deployment.apps "python-app" deleted from default namespace
+```
+
+* 127.0.0.1 python-app.test.com is still configured in [etc/hosts](/Windows/System32/drivers/etc/hosts)
+
+* kindest/node mapping is working
+
+```bash
+docker ps # check mapping 80->80 443->443 38275->6443
+  CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
+  685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
+```
+
+* Local cluster kind is running
+
+```bash
+kubectl cluster-info --context kind-kind
+  Kubernetes control plane is running at https://127.0.0.1:XXXXX
+  CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+* Ingress nginx controller is running
+
+```bash
+kubectl get pods -n ingress-nginx 
+  NAME                                        READY   STATUS      RESTARTS   AGE
+  ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
+  ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
+  ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
+```
+
+## Helm Installation
 
 * https://github.com/helm/helm/releases checksum
 * https://helm.sh/docs/intro/install/#from-apt-debianubuntu
@@ -948,9 +1060,12 @@ charts/python-app-wsl2$ vim values.yaml
 
 our [charts/python-app-wsl2/values.yaml](charts/python-app-wsl2/values.yaml)
 
+* Test 
+
 ```bash
 charts/python-app-wsl2$ helm install python-app-wsl2 -n python .
   Error: INSTALLATION FAILED: template: python-app-wsl2/templates/NOTES.txt:2:14: executing "python-app-wsl2/templates/NOTES.txt" at <.Values.httpRoute.enabled>: nil pointer evaluating interface {}.enabled
+
 charts/python-app-wsl2$ vim templates/NOTES.txt # remove all httpRoute stuff 
 
 # need to create python namespace 
@@ -962,6 +1077,11 @@ kube-node-lease      Active   9h
 kube-public          Active   9h
 kube-system          Active   9h
 local-path-storage   Active   9h
+```
+
+## Create our helm chart - deployment, service and ingress with heml
+
+```bash
 
 helm install python-app-wsl2 --create-namespace -n python .
   I1119 23:29:38.852706    4138 warnings.go:110] "Warning: spec.template.spec.containers[0].resources.requests[memory]: fractional byte value \"50m\" is invalid, must be an integer"
