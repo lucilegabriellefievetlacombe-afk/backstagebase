@@ -981,35 +981,27 @@ helm version
   version.BuildInfo{Version:"v3.19.2", GitCommit:"8766e718a0119851f10ddbe4577593a45fadf544", GitTreeState:"clean", GoVersion:"go1.24.9"}
 ```
 
-### create our Chart under wls2 ubuntu
+### Create our Chart under wls2 ubuntu
 
 ```bash
 mkdir charts; cd charts
-charts$ helm create python-app-wsl2
-  Creating python-app-wsl2
+charts$ helm create python-app
+  Creating python-app
 ```
 
-It created a directory with a charts directory, it is our charts.
+It has created a directory with a charts directory, it is our python-app charts.
 
 ```bash
-charts$ cd python-app-wsl2
-charts/python-app-wsl2$ ls
+charts$ cd python-app
+charts/python-app$ ls
   Chart.yaml  charts  templates  values.yaml
-```
-
-* we remove charts folder and .helmignore, we won't use yet
-
-```bash
-charts/python-app-wsl2$ rm -rf charts/ .helmignore
-charts/python-app-wsl2$ ls
-  Chart.yaml  templates  values.yaml
 ```
 
 * we need the three files Chart.yaml  templates  values.yaml
 * we look the template directory
 
 ```bash
-charts/python-app-wsl2/templates$ ls -al
+charts/python-app-wsl2/$ ls -al templates
   total 24
   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
@@ -1024,69 +1016,39 @@ charts/python-app-wsl2/templates$ ls -al
   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
 ```
 
-* we remove tests, hpa.yml, httproute.yaml and the serviceaccount.yaml we don't need for the moment.
+### Configure
 
-```bash
-charts/python-app-wsl2/templates$ rm -rf tests/ hpa.yaml httproute.yaml serviceaccount.yaml
-charts/python-app-wsl2/templates$ ls -a
-.  ..  NOTES.txt  _helpers.tpl  deployment.yaml ingress.yaml  service.yaml
-```
-
-* we have the same sort of configuration we did in k8s
-* we adapt the values to the k8s template
+we must have the same sort of configuration we did in k8s/, we adapt the values.yaml to respect the our k8s/ files :
 
 * change image repository: luspokvenus/python-app
 * change image appVersion: tag: "v2"
 * change service ports: 5000 (because they assume container target is identical to host source port in the deployment templates)
 * change ingress: enabled: true
-* check ingressClassName with kubectl get ingressclassname (not really necessary because we have just one - can remove this line) 
 * set the ingress hosts host at "python-app.test.com"
 * set the ingress hosts pathType at Prefix
 * set tge serviceAccount create at false
-* set resources requests cpu and memory at 50m
-* remove httpRoutes 
+* set resources requests cpu and memory at 30m and 30Mi
 * config livenessProbe paths at /api/v1/healthz
-
+* check ingressClassName with kubectl get ingressclassname (not really necessary because we have just one - can remove this line)
 
 ```bash
-cd charts/python-app-wsl2
 # get className of ingress
 kubectl get ingressclass
   NAME    CONTROLLER             PARAMETERS   AGE
   nginx   k8s.io/ingress-nginx   <none>       23h
 # it is nginx
-charts/python-app-wsl2$ vim values.yaml
+charts/python-app$ vim values.yaml
 ```
 
-our [charts/python-app-wsl2/values.yaml](charts/python-app-wsl2/values.yaml)
+our [charts/python-app/values.yaml](charts/python-app/values.yaml)
 
-* Test 
-
-```bash
-charts/python-app-wsl2$ helm install python-app-wsl2 -n python .
-  Error: INSTALLATION FAILED: template: python-app-wsl2/templates/NOTES.txt:2:14: executing "python-app-wsl2/templates/NOTES.txt" at <.Values.httpRoute.enabled>: nil pointer evaluating interface {}.enabled
-
-charts/python-app-wsl2$ vim templates/NOTES.txt # remove all httpRoute stuff 
-
-# need to create python namespace 
-charts/python-app-wsl2$ kubectl get ns
-NAME                 STATUS   AGE
-default              Active   9h
-ingress-nginx        Active   9h
-kube-node-lease      Active   9h
-kube-public          Active   9h
-kube-system          Active   9h
-local-path-storage   Active   9h
-```
-
-## Create our helm chart - deployment, service and ingress with heml
+## Install our helm chart service, deployment and ingress with heml
 
 ```bash
 
-helm install python-app-wsl2 --create-namespace -n python .
-  I1119 23:29:38.852706    4138 warnings.go:110] "Warning: spec.template.spec.containers[0].resources.requests[memory]: fractional byte value \"50m\" is invalid, must be an integer"
-  NAME: python-app-wsl2
-  LAST DEPLOYED: Wed Nov 19 23:29:38 2025
+charts/python-app$ helm install python-app --create-namespace -n python .
+  NAME: python-app
+  LAST DEPLOYED: Fri Nov 21 15:43:04 2025
   NAMESPACE: python
   STATUS: deployed
   REVISION: 1
@@ -1094,9 +1056,12 @@ helm install python-app-wsl2 --create-namespace -n python .
   NOTES:
   1. Get the application URL by running these commands:
     http://python-app.test.com/
+```
 
-# got python name space now
-charts/python-app-wsl2$ kubectl get ns
+* Got python name space now
+
+```bash
+charts/python-app$ kubectl get ns
   NAME                 STATUS   AGE
   default              Active   9h
   ingress-nginx        Active   9h
@@ -1106,4 +1071,28 @@ charts/python-app-wsl2$ kubectl get ns
   local-path-storage   Active   9h
   python               Active   3m30s
 
-  ```
+```
+
+* Got 1/1 ready and Running pod in python namespace
+
+```bash
+charts/python-app$ kubectl get pods -n python
+NAME                        READY   STATUS    RESTARTS        AGE
+python-app-d9b9cd5f-22cx6   1/1     Running   7 (2m54s ago)   11m
+```
+
+* Got kind-control-plane  Ready in in python namespace
+
+```bash
+charts/python-app$ kubectl get nodes -n python
+NAME                 STATUS   ROLES           AGE   VERSION
+kind-control-plane   Ready    control-plane   26h   v1.34.0
+```
+
+* Got python-app service on port 5000
+
+```bash
+charts/python-app$ kubectl get services -n python
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+python-app   ClusterIP   10.96.86.124   <none>        5000/TCP   10m
+```
