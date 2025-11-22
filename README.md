@@ -153,16 +153,17 @@
 **Kubernetes local Cluster**
 : A Kubernetes cluster is a **collection of machines (nodes) designed to run containerized applications**. It is the core of Kubernetes' functionality, *enabling the orchestration, scaling, and management of containers* across multiple machines, whether they are physical, virtual, on-premises, or in the cloud.
 
-   * **Control Plane**: This is the **brain of the cluster**, responsible for **managing the desired state** of the **system**. It includes: 
-        * **kube-apiserver**: Exposes the Kubernetes API for communication. 
-        * **etcd**: A key-value store for cluster data persistence.
-        * **kube-scheduler**: Assigns pods to nodes based on resource availability and constraints. 
-        * **kube-controller-manager**: Manages controllers like node health, job completion, and replication.
-   * **Nodes**: These are the **worker machines** (physical or virtual) that run the actual workloads. Each node contains:
-       * **kubelet**: Ensures containers in pods are running and healthy. 
-       * **kube-proxy**: Manages networking rules for communication between pods. Container 
-       * **Runtime**: Executes containers (e.g., containerd, CRI-O).
-   * **Pods**: The **smallest deployable unit** in Kubernetes, **containing one or more containers** that share resources like storage and networking.
+   > * **Control Plane**: This is the **brain of the cluster**, responsible for **managing the desired  > > > state** of the **system**. It includes: 
+   >     * **kube-apiserver**: Exposes the Kubernetes API for communication. 
+   >     * **etcd**: A key-value store for cluster data persistence.
+   >     * **kube-scheduler**: Assigns pods to nodes based on resource availability and constraints. 
+   >     * **kube-controller-manager**: Manages controllers like node health, job completion, and     replication.
+   >* **Nodes**: These are the **worker machines** (physical or virtual) that run the actual workloads. 
+   > Each node contains:
+   >    * **kubelet**: Ensures containers in pods are running and healthy. 
+   >    * **kube-proxy**: Manages networking rules for communication between pods. Container 
+   >    * **Runtime**: Executes containers (e.g., containerd, CRI-O).
+   > * **Pods**: The **smallest deployable unit** in Kubernetes, **containing one or more containers** that > share resources like storage and networking.
 
 **Services and Networking**
 : Service: Exposes pods as a network service, enabling communication. Ingress: Manages external access to services, such as HTTP routing
@@ -261,7 +262,16 @@ Join now and get ahead in the future of DevOps & Platform Engineering!
 
 https://github.com/ricardoandre97/python-app
 
-### writing Dockerfile
+###
+
+```bash
+mkdir -p ~/src/backstage; cd ~/src/backstage
+git clone https://github.com/ricardoandre97/python-app.git .
+cd python-app
+export PROJ=`pwd`
+```
+
+### writing Dockerfile in ${PROJ}/Dockerfile
 
 ```dockerfile
 
@@ -277,7 +287,7 @@ CMD python /src/app.py
 
 ```
 
-### writing code in src/app.py
+### writing code in ${PROJ}/src/app.py
 
 using flask, jsonify, datetime, socket
 
@@ -299,29 +309,65 @@ def info():
     })
 
 if __name__ == '__main__':
-    app.run() # works with python only
+    app.run() # will works with python only
 ```
+
+### try on directly on host
+
+```bash
+python src/app.py 
+```
+
+* works on host localhost:5000
+
+### build image, see it
+
+```bash
+docker build -t python-app:v1 .
+docker images
+```
+
+### start the container, see it
+
+```bash
+docker run -dp 8080:5000 python-app:v1
+docker ps
+```
+
+* try on localhost:8080, it doesn't work, debug
 
 ### debug
 
-```bash
+* get in the container
 
-$ python src/app.py # works on localhost:5000
-$ docker build -t python-app:v1 .
-$ docker images
-$ docker run -dp 8080:5000 python-app:v1
-$ docker ps
-$ docker exec -ti 68c20a82c9db sh # try on localhost:8080, doesn't work
-/ # apk add curl
-/ # curl http://localhost:5000
-# always ok
-/ # ip a
-...
-inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
-/ # curl http://172.17.0.2:5000 # works with app.run(host="0.0.0.0")
+```bash
+docker exec -ti 68c20a82c9db sh 
+```
+   > / #
+
+* add curl to check 5000 from the container
+
+```bash
+apk add curl
+curl http://localhost:5000
 ```
 
-* open host brower on http://172.17.0.2:5000, should work
+* it is ok
+* check container IP
+
+```bash
+ip a
+```
+
+   >...
+   > inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+
+```bash
+curl http://172.17.0.2:5000 
+```
+
+* open host browser on http://172.17.0.2:5000, it works
+* the server is ok, but not on the 8080, we extend the publishing
 
 ### fix host filter, allow all
 
@@ -329,26 +375,38 @@ inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
 
 if __name__ == '__main__':
     # app.run() # works with python only
-    app.run(host="0.0.0.0") # works with docker and python
+    app.run(host="0.0.0.0") # will works with docker and python
+```
+
+```bash
+$ python src/app.py # still works on localhost:5000 and docker 
 ```
 
 ### rebuild v2
 
 ```bash
-
-$ python src/app.py # works on localhost:5000 and docker with app.run(host="0.0.0.0")
 $ docker build -t python-app:v2 .
 $ docker images
+```
+
+### re-run v2
+
+```bash
 $ docker run -dp 8080:5000 python-app:v2
 $ docker ps
-$ docker exec -ti 68c20a82c9db sh # works on localhost:8080 with app.run(host="0.0.0.0")
 ```
+
+* try on localhost:8080, it works
 
 ## share in repo
 
-* create repo (see DCA images)
+```bash
+cd ~/src/backstage/pyhton-app/
+```
 
-* **tag** the image with your Docker Hub login
+* Create a repo (see DCA images) in Docker Hub
+
+* **tag** the image with your Docker Hub login ${TheLogin}
   
 ```bash
 docker tag pyhton-app:v2 ${TheLogin}/pyhton-app:v2
@@ -358,8 +416,10 @@ docker tag pyhton-app:v2 ${TheLogin}/pyhton-app:v2
 
 ```bash
 docker login -u ${TheLogin}
-    enter TheAccessToken
 ```
+
+   > Password: # enter TheAccessToken
+   >  Login Succeeded
 
 * Push your image
 * Build for amd64
@@ -380,8 +440,9 @@ docker push ${TheLogin}/pyhton-app
 
 ```bash
 uname -m
- x86_64
 ```
+
+   > x86_64
 
 * get kind bin
 * check sha256 signature
@@ -392,12 +453,16 @@ uname -m
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-$(uname)-amd64
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-$(uname)-amd64.sha256sum
 echo "$(cat kind.sha256)  kind" | sha256sum --check
+```
+
+* if ok, give rights and move it in user binairies
+
+```bash
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 ```
 
-* check kind :
-  * check version
+* check kind, check version
 
 ```bash
 kind --version
@@ -437,11 +502,6 @@ kind create cluster
   * https://127.0.0.1:41881/
   * https://127.0.0.1:41881/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-* *to delete it :*
-
-```bash
-kind delete cluster
-```
 
 ## 2 - Get kubectl control plane command line
 
@@ -582,11 +642,11 @@ kind create cluster
 kubectl get pods
   No resources found in default namespace.
 kubectl cluster-info
-  Kubernetes control plane is running at https://127.0.0.1:36447
-  CoreDNS is running at https://127.0.0.1:36447/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
+
+   > Kubernetes control plane is running at https://127.0.0.1:XXXXX
+   > CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+   > To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 * check url in the browser (allow exeption)
   * https://127.0.0.1:XXXX
@@ -595,28 +655,38 @@ kubectl cluster-info
 
 ```bash
 docker ps
-  CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
-  8c5b3017face   kindest/node:v1.34.0   "/usr/local/bin/entr…"   26 minutes ago   Up 25 minutes   127.0.0.1:36447->6443/tcp   kind-control-plane
 ```
+
+   > CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
+   > 8c5b3017face   kindest/node:v1.34.0   "/usr/local/bin/entr…"   26 minutes ago   Up 25 minutes   127.0.0.1:36447->6443/tcp   kind-control-plane
+
+
+* Get namespaces
 
 ```bash
 kubectl get ns
-  NAME                 STATUS   AGE
-  default              Active   25m
-  kube-node-lease      Active   25m
-  kube-public          Active   25m
-  kube-system          Active   25m
-  local-path-storage   Active   25m
 ```
+
+   > NAME                 STATUS   AGE
+   > default              Active   25m
+   > kube-node-lease      Active   25m
+   > kube-public          Active   25m
+   > kube-system          Active   25m
+   > local-path-storage   Active   25m
 
 ### [Ingress 4 Kind](https://kind.sigs.k8s.io/docs/user/ingress/) | [4 k8s](https://kubernetes.io/docs/concepts/services-networking/ingress/ ) | [ 4 k8s & flask ](https://github.com/SamanBarahoie/IngressFlask/tree/main/k8s)
 
 ## 3 - Create our local cluster with Kind
 
+* delete previous one
+  
 ```bash
-
 kind delete cluster
+```
 
+* Create cluste kind with configuration as controle-plane
+
+```bash
 cat <<EOF | kind create cluster --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -630,82 +700,89 @@ nodes:
     hostPort: 443
     protocol: TCP
 EOF
-  Creating cluster "kind" ...
-  ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
-  ✓ Preparing nodes 📦
-  ✓ Writing configuration 📜
-  ✓ Starting control-plane 🕹️
-  ✓ Installing CNI 🔌
-  ✓ Installing StorageClass 💾
-  Set kubectl context to "kind-kind"
-  You can now use your cluster with:
-
-kubectl cluster-info --context kind-kind
-
-Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
 ```
+
+   > Creating cluster "kind" ...
+   > ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+   > ✓ Preparing nodes 📦
+   > ✓ Writing configuration 📜
+   > ✓ Starting control-plane 🕹️
+   > ✓ Installing CNI 🔌
+   > ✓ Installing StorageClass 💾
+   > Set kubectl context to "kind-kind"
+   > You can now use your cluster with:
+
+
+```bash
+kubectl cluster-info --context kind-kind
+```
+
+   > Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+
 
 * Check kindest/node mapping
 
 ```bash
 docker ps # check mapping 80->80 443->443 38275->6443
-CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
-685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
 ```
+   > CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
+    > 685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
 
 ## 4 - Deploy our nginx pod
 
 ```bash
 kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
-  namespace/ingress-nginx created # our namspace created
-  serviceaccount/ingress-nginx created
-  serviceaccount/ingress-nginx-admission created
-  role.rbac.authorization.k8s.io/ingress-nginx created
-  role.rbac.authorization.k8s.io/ingress-nginx-admission created
-  clusterrole.rbac.authorization.k8s.io/ingress-nginx created
-  clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
-  rolebinding.rbac.authorization.k8s.io/ingress-nginx created
-  rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
-  clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
-  clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
-  configmap/ingress-nginx-controller created
-  service/ingress-nginx-controller created
-  service/ingress-nginx-controller-admission created
-  deployment.apps/ingress-nginx-controller created
-  job.batch/ingress-nginx-admission-create created
-  job.batch/ingress-nginx-admission-patch created
-  ingressclass.networking.k8s.io/nginx created
-  validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
 ```
+   > namespace/ingress-nginx created # our namspace created
+   > serviceaccount/ingress-nginx created
+   > serviceaccount/ingress-nginx-admission created
+   > role.rbac.authorization.k8s.io/ingress-nginx created
+   > role.rbac.authorization.k8s.io/ingress-nginx-admission created
+   > clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+   > clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+   > rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+   > rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+   > clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+   > clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+   > configmap/ingress-nginx-controller created
+   > service/ingress-nginx-controller created
+   > service/ingress-nginx-controller-admission created
+   > deployment.apps/ingress-nginx-controller created
+   > job.batch/ingress-nginx-admission-create created
+   > job.batch/ingress-nginx-admission-patch created
+   > ingressclass.networking.k8s.io/nginx created
+   > validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
 
 * Check kindest/node mapping
-
 * Check cluster info
 
 ```bash
 kubectl cluster-info
-  Kubernetes control plane is running at https://127.0.0.1:XXXXX
+```
+
+   > Kubernetes control plane is running at https://127.0.0.1:XXXXX
   CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-```
+   > To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 * Check pods in ingress-nginx name space
 * Check ingress nginx controller is running
 
 ```bash
 kubectl get pods -n ingress-nginx 
-  NAME                                        READY   STATUS      RESTARTS   AGE
-  ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
-  ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
-  ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
 ```
 
-## 5 - Configuration of ingress
+   > NAME                                        READY   STATUS      RESTARTS   AGE
+   > ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
+   > ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
+   > ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
 
-* Copy kubernetes Ingress 
-https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend
-https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment
+## 5 - Configuration of ingress-nginx
+
+* Copy kubernetes Ingress
+
+  * https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend
+  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment
 
 ```yaml
 apiVersion: apps/v1
@@ -744,28 +821,29 @@ vim k8s/deploy.yaml
 
 our [k8s/deploy.yaml](k8s/deploy.yaml)
 
-* deploy
+### deploy nginx
 
 ```bash
 kubectl apply -f k8s/deploy.yaml
-  deployment.apps/python-app created
 ```
+   > deployment.apps/python-app created
 
 * check deployment
 
 ```bash
 kubectl get deployments
-  NAME         READY   UP-TO-DATE   AVAILABLE   AGE
-  python-app   1/1     1            1           101s
 ```
+   > NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+   > python-app   1/1     1            1           101s
+
 
 ## 6 - Create k8s Services
 
 how do we access our deployed application via broswer ?
 
 * copy definig a service
-https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
-https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/service/simple-service.yaml
+  * https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+  * https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/service/simple-service.yaml
 
 ```yaml
 apiVersion: v1
@@ -791,49 +869,52 @@ vim k8s/service.yaml
 
 our [k8s/service.yaml](k8s/service.yaml)
 
-* apply k8s/service.yaml
+### apply k8s/service.yaml
 
 ```bash
 kubectl apply -f k8s/service.yaml
-  service/python-app created
 ```
+
+   > service/python-app created
 
 * check service
 
 ```bash
 kubectl get svc
-  NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
-  kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP    3h7m
-  python-app   ClusterIP   10.96.163.6   <none>        8080/TCP   3m20s
 ```
+
+   > NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+   > kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP    3h7m
+   > python-app   ClusterIP   10.96.163.6   <none>        8080/TCP   3m20s
 
 * check forwarding, look for endpoints, one is enough
 
 ```bash
 kubectl describe svc python-app
-  Name:                     python-app
-  Namespace:                default
-  Labels:                   <none>
-  Annotations:              <none>
-  Selector:                 app=python-app
-  Type:                     ClusterIP
-  IP Family Policy:         SingleStack
-  IP Families:              IPv4
-  IP:                       10.96.163.6
-  IPs:                      10.96.163.6
-  Port:                     <unset>  8080/TCP
-  TargetPort:               5000/TCP
-  Endpoints:                10.244.0.8:5000
-  Session Affinity:         None
-  Internal Traffic Policy:  Cluster
-  Events:                   <none>
 ```
+
+   > Name:                     python-app
+   > Namespace:                default
+   > Labels:                   <none>
+   > Annotations:              <none>
+   > Selector:                 app=python-app
+   > Type:                     ClusterIP
+   > IP Family Policy:         SingleStack
+   > IP Families:              IPv4
+   > IP:                       10.96.163.6
+   > IPs:                      10.96.163.6
+   > Port:                     <unset>  8080/TCP
+   > TargetPort:               5000/TCP
+   > Endpoints:                10.244.0.8:5000
+   > Session Affinity:         None
+   > Internal Traffic Policy:  Cluster
+   > Events:                   <none>
 
 ## 7 - Expose the application
 
 * copy definig a ingress resource sample
-https://kind.sigs.k8s.io/docs/user/ingress/
-https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+  * https://kind.sigs.k8s.io/docs/user/ingress/
+  * https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -862,12 +943,16 @@ spec:
 * set the host "source" port (port forwarded exposed), check in service.yaml  targetPort
 * set the host at "python-app.test.com"
 
-
 ```bash
 kubectl get ingressclass
-  NAME    CONTROLLER             PARAMETERS   AGE
-  nginx   k8s.io/ingress-nginx   <none>       23h
-# it is nginx
+```
+
+   > NAME    CONTROLLER             PARAMETERS   AGE
+   > **nginx**   k8s.io/ingress-nginx   <none>       23h
+
+* it is nginx
+
+```bash
 vim k8s/ingress.yaml
 ```
 
@@ -879,35 +964,37 @@ our [k8s/ingress.yaml](k8s/ingress.yaml)
 # Copyright (c) 1993-2009 Microsoft Corp.
 #
 # This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
-...
+#
 127.0.0.1 python-app.test.com
 ```
 
 * save the /etc/hosts
 
-* apply k8s/ingress.yaml
+### apply k8s/ingress.yaml
 
 ```bash
 kubectl apply -f k8s/ingress.yaml
-  ingress.networking.k8s.io/python-app created
 ```
 
-* check our ingress 
+   > ingress.networking.k8s.io/python-app created
+
+* check our ingress
 
 ```bash
 kubectl get ing
-NAME         CLASS   HOSTS                 ADDRESS   PORTS   AGE
-python-app   nginx   python-app.test.com             80      18s
 ```
 
-* check our apllication
+   > NAME         CLASS   HOSTS                 ADDRESS   PORTS   AGE
+   > python-app   nginx   python-app.test.com             80      18s
+
+* check our aplication
 * **it is created on port 80, and visible in our host browser at http://python-app.test.com/**
 
 ## Clean k8s hand made ingress, service and deployment
 
 ```bash
 cd k8s
-k8s$ kubectl delete -f ingress.yaml
+kubectl delete -f ingress.yaml
   ingress.networking.k8s.io "python-app" deleted from default namespace
 k8s$ kubectl delete -f service.yaml
   service "python-app" deleted from default namespace
@@ -927,6 +1014,10 @@ docker login -u luspokvenus
 ```
 
 * k8s resources set applied with files are deleted
+
+```bash
+cd ~/src/backstage/pyhton-app/
+```
 
 ```bash
 kubectl delete -f k8s/ingress.yaml -f k8s/service.yaml -f k8s/deploy.yaml
@@ -984,37 +1075,46 @@ helm version
 ### Create our Chart under wls2 ubuntu
 
 ```bash
-mkdir charts; cd charts
-charts$ helm create python-app
-  Creating python-app
+cd ~/src/backstage/pyhton-app/
 ```
+
+```bash
+mkdir charts; cd charts
+helm create python-app
+```
+
+   > Creating python-app
 
 It has created a directory with a charts directory, it is our python-app charts.
 
 ```bash
-charts$ cd python-app
-charts/python-app$ ls
-  Chart.yaml  charts  templates  values.yaml
+cd python-app
+ls
 ```
+
+   > Chart.yaml  charts  templates  values.yaml
+
 
 * we need the three files Chart.yaml  templates  values.yaml
 * we look the template directory
 
 ```bash
 charts/python-app-wsl2/$ ls -al templates
-  total 24
-  drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
-  drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
-  -rwxrwxrwx 1 lucile lucile 2850 Nov 19 15:11 NOTES.txt
-  -rwxrwxrwx 1 lucile lucile 1862 Nov 19 15:11 _helpers.tpl
-  -rwxrwxrwx 1 lucile lucile 2420 Nov 19 15:11 deployment.yaml
-  -rwxrwxrwx 1 lucile lucile 1015 Nov 19 15:11 hpa.yaml
-  -rwxrwxrwx 1 lucile lucile  969 Nov 19 15:11 httproute.yaml
-  -rwxrwxrwx 1 lucile lucile 1112 Nov 19 15:11 ingress.yaml
-  -rwxrwxrwx 1 lucile lucile  385 Nov 19 15:11 service.yaml
-  -rwxrwxrwx 1 lucile lucile  405 Nov 19 15:11 serviceaccount.yaml
-  drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
 ```
+
+   > total 24
+   > drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
+   > drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
+   > -rwxrwxrwx 1 lucile lucile 2850 Nov 19 15:11 NOTES.txt
+   > -rwxrwxrwx 1 lucile lucile 1862 Nov 19 15:11 _helpers.tpl
+   > -rwxrwxrwx 1 lucile lucile 2420 Nov 19 15:11 deployment.yaml
+   > -rwxrwxrwx 1 lucile lucile 1015 Nov 19 15:11 hpa.yaml
+   > -rwxrwxrwx 1 lucile lucile  969 Nov 19 15:11 httproute.yaml
+   > -rwxrwxrwx 1 lucile lucile 1112 Nov 19 15:11 ingress.yaml
+   > -rwxrwxrwx 1 lucile lucile  385 Nov 19 15:11 service.yaml
+   > -rwxrwxrwx 1 lucile lucile  405 Nov 19 15:11 serviceaccount.yaml
+   > drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
+
 
 ### Configure
 
@@ -1061,38 +1161,112 @@ charts/python-app$ helm install python-app --create-namespace -n python .
 * Got python name space now
 
 ```bash
-charts/python-app$ kubectl get ns
-  NAME                 STATUS   AGE
-  default              Active   9h
-  ingress-nginx        Active   9h
-  kube-node-lease      Active   9h
-  kube-public          Active   9h
-  kube-system          Active   9h
-  local-path-storage   Active   9h
-  python               Active   3m30s
-
+kubectl get ns
 ```
+
+   > NAME                 STATUS   AGE
+   > default              Active   9h
+   > ingress-nginx        Active   9h
+   > kube-node-lease      Active   9h
+   > kube-public          Active   9h
+   > kube-system          Active   9h
+   > local-path-storage   Active   9h
+   > python               Active   3m30s
+
+* Got nginx 
+
+```bash
+kubectl get ing -n python
+```
+
+   > NAME         CLASS   HOSTS                 ADDRESS     PORTS   AGE
+   >python-app   nginx   python-app.test.com   localhost   80      4m43s
 
 * Got 1/1 ready and Running pod in python namespace
 
 ```bash
-charts/python-app$ kubectl get pods -n python
-NAME                        READY   STATUS    RESTARTS        AGE
-python-app-d9b9cd5f-22cx6   1/1     Running   7 (2m54s ago)   11m
+kubectl get pods -n python
 ```
+
+   > NAME                        READY   STATUS    RESTARTS        AGE
+   > python-app-d9b9cd5f-22cx6   1/1     Running   7 (2m54s ago)   11m
+
 
 * Got kind-control-plane  Ready in in python namespace
 
 ```bash
-charts/python-app$ kubectl get nodes -n python
-NAME                 STATUS   ROLES           AGE   VERSION
-kind-control-plane   Ready    control-plane   26h   v1.34.0
+kubectl get nodes -n python
 ```
+
+   > NAME                 STATUS   ROLES           AGE   VERSION
+   > kind-control-plane   Ready    control-plane   26h   v1.34.0
+
 
 * Got python-app service on port 5000
 
 ```bash
-charts/python-app$ kubectl get services -n python
-NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-python-app   ClusterIP   10.96.86.124   <none>        5000/TCP   10m
+kubectl get services -n python
 ```
+
+   > NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+   > python-app   ClusterIP   10.96.86.124   <none>        5000/TCP   10m
+
+
+* Got deployment READY 1/1 & Available
+
+```bash
+kubectl get deployment -n python
+```
+
+   > NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+   > python-app   1/1     1            1           8m18s
+
+
+* Got all : ing,po,no,deploment at once
+
+```bash
+kubectl get ing,po,no,svc,deployment -n python
+```
+
+
+## Clean helm chart deployment
+
+```bash
+cd ~/charts/python-app
+helm uninstall python-app -n python
+```
+
+   > release "python-app" uninstalled
+
+
+* Verify, it is gone, pod terminated
+
+```bash
+kubectl get ing,po,no,svc,deployment -n python
+```
+
+   > NAME                            READY   STATUS        RESTARTS   AGE
+   > pod/python-app-d9b9cd5f-85m6l   1/1     Terminating   0          34s
+   >
+   > NAME                      STATUS   ROLES           AGE    VERSION
+   > node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0
+
+```bash
+kubectl get ing,po,no,svc,deployment -n python
+```
+
+   > NAME                      STATUS   ROLES           AGE    VERSION
+   > node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0  
+
+
+## ArgoCD
+
+[Argo Proj - helm](https://github.com/argoproj/argo-helm)
+
+### Install
+
+```bash
+helm repo add argo https://argoproj.github.io/argo-helm
+```
+
+   > "argo" has been added to your repositories
