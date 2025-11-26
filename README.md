@@ -476,27 +476,38 @@ kind --version
 
 ```bash
 kind --version
-    kind version 0.30.0
+```
+
+   > kind version 0.30.0
+
+```bash
 kind create cluster
-    Creating cluster "kind" ...
-      ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
-      ✓ Preparing nodes 📦
-      ✓ Writing configuration 📜
-      ✓ Starting control-plane 🕹️
-      ✓ Installing CNI 🔌
-      ✓ Installing StorageClass 💾
-    Set kubectl context to "kind-kind"
-    You can now use your cluster with:
+```
 
+   > Creating cluster "kind" ...
+   >   ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+   >   ✓ Preparing nodes 📦
+   >   ✓ Writing configuration 📜
+   >   ✓ Starting control-plane 🕹️
+   >   ✓ Installing CNI 🔌
+   >   ✓ Installing StorageClass 💾
+   > Set kubectl context to "kind-kind"
+   > You can now use your cluster with:
+
+```bash
     kubectl cluster-info --context kind-kind
+```
 
-      Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
-      lucile@ubuntu-manager:~$ kubectl cluster-info --context kind-kind
-      Kubernetes control plane is running at https://127.0.0.1:41881
+  > Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+
+```bash
+kubectl cluster-info --context kind-kind
+```
+
+   > Kubernetes control plane is running at https://127.0.0.1:41881
       CoreDNS is running at https://127.0.0.1:41881/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-      To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-```
+   > To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'
 
 * try it in your brower : 
   * https://127.0.0.1:41881/
@@ -1262,6 +1273,7 @@ kubectl get ing,po,no,svc,deployment -n python
 ## ArgoCD
 
 [Argo Proj - helm](https://github.com/argoproj/argo-helm)
+[Argo-helm argo-cd charts](https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/README.md)
 
 ### Install
 
@@ -1270,3 +1282,70 @@ helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
    > "argo" has been added to your repositories
+
+```bash
+helm repo ls
+```
+
+   > NAME    URL
+   > argo    https://argoproj.github.io/argo-helm
+
+
+```bash
+cd charts; mkdir argocd; cd argocd
+vim values-argo.yaml
+```
+
+> redis-ha:
+>   enabled: false
+>
+> controller:
+>   replicas: 1
+>
+> server:
+>   replicas: 1
+>
+> repoServer:
+>   replicas: 1
+>
+> applicationSet:
+>   replicas: 1
+>
+> # adding ingress stuff
+> global:
+>   domain: argocd.test.com
+>
+> certificate:
+>   enabled: true
+>
+> server:
+>   ingress:
+>     enabled: true
+>     ingressClassName: nginx
+
+```bash
+ helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f values-argo-org.yaml
+```
+
+> Release "argocd" has been upgraded. Happy Helming!
+> NAME: argocd
+> LAST DEPLOYED: Sun Nov 23 12:50:26 2025
+> NAMESPACE: argocd
+> STATUS: deployed
+> REVISION: 2
+> TEST SUITE: None
+> NOTES:
+> In order to access the server UI you have the following options:
+> 1. kubectl port-forward service/argocd-server -n argocd 8080:443
+>    and then open the browser on http://localhost:8080 and accept the certificate
+>
+> 2. enable ingress in the values file `server.ingress.enabled` and either
+>      - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+>      - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
+
+>
+> After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
+>
+> kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+>
+>(You sh ould delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
