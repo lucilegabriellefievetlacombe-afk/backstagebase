@@ -41,7 +41,7 @@
 **Flask API**
 : Flask API is primarily built using the Flask framework, a lightweight and flexible **micro-framework for Python**. Flask itself was created by Armin Ronacher as part of the Pallets Projects.
 
-<details> <summary>Glossary</summary>
+<details> <summary>Glossary details</summary>
 
 **ArgoCD**
 : Argo CD is a **declarative, GitOps continuous delivery tool for Kubernetes**.
@@ -343,7 +343,11 @@ docker ps
 ```bash
 docker exec -ti 68c20a82c9db sh 
 ```
-   > / #
+
+```bash result
+   / #
+```
+*you are in the pod tty*
 
 * add curl to check 5000 from the container
 
@@ -359,8 +363,10 @@ curl http://localhost:5000
 ip a
 ```
 
-   >...
-   > inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+```bash result
+   ...
+   inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+```
 
 ```bash
 curl http://172.17.0.2:5000 
@@ -478,36 +484,45 @@ kind --version
 kind --version
 ```
 
-   > kind version 0.30.0
+```bash result
+   kind version 0.30.0
+```
 
 ```bash
 kind create cluster
 ```
 
-   > Creating cluster "kind" ...
-   >   ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
-   >   ✓ Preparing nodes 📦
-   >   ✓ Writing configuration 📜
-   >   ✓ Starting control-plane 🕹️
-   >   ✓ Installing CNI 🔌
-   >   ✓ Installing StorageClass 💾
-   > Set kubectl context to "kind-kind"
-   > You can now use your cluster with:
-
-```bash
-    kubectl cluster-info --context kind-kind
+```bash result
+   Creating cluster "kind" ...
+      ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+      ✓ Preparing nodes 📦
+      ✓ Writing configuration 📜
+      ✓ Starting control-plane 🕹️
+      ✓ Installing CNI 🔌
+      ✓ Installing StorageClass 💾
+   Set kubectl context to "kind-kind"
+   You can now use your cluster with:
+      kubectl cluster-info --context kind-kind
 ```
 
-  > Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+```bash
+   kubectl cluster-info --context kind-kind
+```
+
+```bash result
+  Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+```
 
 ```bash
 kubectl cluster-info --context kind-kind
 ```
 
-   > Kubernetes control plane is running at https://127.0.0.1:41881
+```bash result
+   Kubernetes control plane is running at https://127.0.0.1:41881
       CoreDNS is running at https://127.0.0.1:41881/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-   > To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'
+   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'
+```
 
 * try it in your brower : 
   * https://127.0.0.1:41881/
@@ -540,7 +555,7 @@ kubectl version --output=yaml
 kubectl [command] [RESOURCE TYPE] [NAME] [flags]
 ```
 
-<details> <summary> command: </summary>
+<details> <summary>commands</summary>
 
 * alpha : kubectl **alpha** SUBCOMMAND [flags] : List available alpha commands.
 * annotate : kubectcl **annotate** (-f FILENAME | TYPE) K0=V0 K1=V1.. [--overwrite] [--all] [--resource-version=VX] [flags] : Add or update the annotations of n resources.
@@ -589,7 +604,7 @@ kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
 
 </details>
 
-<details> <summary>RESSOURCE TYPE </summary>
+<details> <summary>RESSOURCE TYPES</summary>
 
 * bindings : Binding
 * componentstatuses - **cs** : ComponentStatus
@@ -655,25 +670,24 @@ kubectl get pods
 kubectl cluster-info
 ```
 
-   > Kubernetes control plane is running at https://127.0.0.1:XXXXX
-
-   > CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-   > To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```bash result
+   Kubernetes control plane is running at https://127.0.0.1:XXXXX
+   CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
 
 * check url in the browser (allow exeption)
   * https://127.0.0.1:XXXX
   * https://127.0.0.1:XXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-
 ```bash
 docker ps
 ```
 
-   > CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
-
-   > 8c5b3017face   kindest/node:v1.34.0   "/usr/local/bin/entr…"   26 minutes ago   Up 25 minutes   127.0.0.1:36447->6443/tcp   kind-control-plane
-
+```bash result
+   CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
+   8c5b3017face   kindest/node:v1.34.0   "/usr/local/bin/entr…"   26 minutes ago   Up 25 minutes   127.0.0.1:36447->6443/tcp   kind-control-plane
+```
 
 * Get namespaces
 
@@ -681,17 +695,18 @@ docker ps
 kubectl get ns
 ```
 
-   > NAME                 STATUS   AGE
+<details> <summary>results</summary>
 
-   > default              Active   25m
+```bash result
+   NAME                 STATUS   AGE
+   default              Active   25m
+   kube-node-lease      Active   25m
+   kube-public          Active   25m
+   kube-system          Active   25m
+   local-path-storage   Active   25m
+```
 
-   > kube-node-lease      Active   25m
-
-   > kube-public          Active   25m
-
-   > kube-system          Active   25m
-
-   > local-path-storage   Active   25m
+</details>
 
 ### [Ingress 4 Kind](https://kind.sigs.k8s.io/docs/user/ingress/) | [4 k8s](https://kubernetes.io/docs/concepts/services-networking/ingress/ ) | [ 4 k8s & flask ](https://github.com/SamanBarahoie/IngressFlask/tree/main/k8s)
 
@@ -721,40 +736,41 @@ nodes:
 EOF
 ```
 
-   > Creating cluster "kind" ...
+<details> <summary>results</summary>
 
-   > ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+```bash result
+   Creating cluster "kind" ...
+   ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+   ✓ Preparing nodes 📦
+   ✓ Writing configuration 📜
+   ✓ Starting control-plane 🕹️
+   ✓ Installing CNI 🔌
+   ✓ Installing StorageClass 💾
+   Set kubectl context to "kind-kind"
+   You can now use your cluster with:
+      kubectl cluster-info --context kind-kind
+```
 
-   > ✓ Preparing nodes 📦
-
-   > ✓ Writing configuration 📜
-
-   > ✓ Starting control-plane 🕹️
-
-   > ✓ Installing CNI 🔌
-
-   > ✓ Installing StorageClass 💾
-
-   > Set kubectl context to "kind-kind"
-
-   > You can now use your cluster with:
-
+</details>
 
 ```bash
 kubectl cluster-info --context kind-kind
 ```
 
-   > Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
-
+```bash result
+   Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+```
 
 * Check kindest/node mapping
 
 ```bash
 docker ps # check mapping 80->80 443->443 38275->6443
 ```
-   > CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
 
-    > 685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
+```bash result
+   CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
+   685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
+```
 
 ## 4 - Deploy our nginx pod
 
@@ -762,43 +778,31 @@ docker ps # check mapping 80->80 443->443 38275->6443
 kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
 ```
 
-   > namespace/ingress-nginx created # our namspace created
+<details> <summary>results</summary>
 
-   > serviceaccount/ingress-nginx created
+```bash result
+   namespace/ingress-nginx created # our namspace created
+   serviceaccount/ingress-nginx created
+   serviceaccount/ingress-nginx-admission created
+   role.rbac.authorization.k8s.io/ingress-nginx created
+   role.rbac.authorization.k8s.io/ingress-nginx-admission created
+   clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+   clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+   rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+   rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+   clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+   clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+   configmap/ingress-nginx-controller created
+   service/ingress-nginx-controller created
+   service/ingress-nginx-controller-admission created
+   deployment.apps/ingress-nginx-controller created
+   job.batch/ingress-nginx-admission-create created
+   job.batch/ingress-nginx-admission-patch created
+   ingressclass.networking.k8s.io/nginx created
+   validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+```
 
-   > serviceaccount/ingress-nginx-admission created
-
-   > role.rbac.authorization.k8s.io/ingress-nginx created
-
-   > role.rbac.authorization.k8s.io/ingress-nginx-admission created
-
-   > clusterrole.rbac.authorization.k8s.io/ingress-nginx created
-
-   > clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
-
-   > rolebinding.rbac.authorization.k8s.io/ingress-nginx created
-
-   > rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
-
-   > clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
-
-   > clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
-
-   > configmap/ingress-nginx-controller created
-
-   > service/ingress-nginx-controller created
-
-   > service/ingress-nginx-controller-admission created
-
-   > deployment.apps/ingress-nginx-controller created
-
-   > job.batch/ingress-nginx-admission-create created
-
-   > job.batch/ingress-nginx-admission-patch created
-
-   > ingressclass.networking.k8s.io/nginx created
-
-   > validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+</details>
 
 * Check kindest/node mapping
 * Check cluster info
@@ -807,11 +811,13 @@ kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.
 kubectl cluster-info
 ```
 
-   > Kubernetes control plane is running at https://127.0.0.1:XXXXX
+```bash result
+   Kubernetes control plane is running at https://127.0.0.1:XXXXX
 
-  CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+   CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
-   > To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
 
 * Check pods in ingress-nginx name space
 * Check ingress nginx controller is running
@@ -820,13 +826,12 @@ kubectl cluster-info
 kubectl get pods -n ingress-nginx 
 ```
 
-   > NAME                                        READY   STATUS      RESTARTS   AGE
-
-   > ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
-
-   > ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
-
-   > ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
+```bash result
+   NAME                                        READY   STATUS      RESTARTS   AGE
+   ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
+   ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
+   ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
+```
 
 ## 5 - Configuration of ingress-nginx
 
@@ -877,16 +882,21 @@ our [k8s/deploy.yaml](k8s/deploy.yaml)
 ```bash
 kubectl apply -f k8s/deploy.yaml
 ```
-   > deployment.apps/python-app created
+
+```bash result
+   deployment.apps/python-app created
+```
 
 * check deployment
 
 ```bash
 kubectl get deployments
 ```
-   > NAME         READY   UP-TO-DATE   AVAILABLE   AGE
-   > python-app   1/1     1            1           101s
 
+```bash result
+   NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+   python-app   1/1     1            1           101s
+```
 
 ## 6 - Create k8s Services
 
@@ -926,7 +936,9 @@ our [k8s/service.yaml](k8s/service.yaml)
 kubectl apply -f k8s/service.yaml
 ```
 
-   > service/python-app created
+```bash result
+   service/python-app created
+```
 
 * check service
 
@@ -934,11 +946,11 @@ kubectl apply -f k8s/service.yaml
 kubectl get svc
 ```
 
-   > NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
-
-   > kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP    3h7m
-
-   > python-app   ClusterIP   10.96.163.6   <none>        8080/TCP   3m20s
+```bash result
+   NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+   kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP    3h7m
+   python-app   ClusterIP   10.96.163.6   <none>        8080/TCP   3m20s
+```
 
 * check forwarding, look for endpoints, one is enough
 
@@ -946,37 +958,28 @@ kubectl get svc
 kubectl describe svc python-app
 ```
 
-   > Name:                     python-app
+<details> <summary>results</summary>
 
-   > Namespace:                default
+```bash result
+   Name:                     python-app
+   Namespace:                default
+   Labels:                   <none>
+   Annotations:              <none>
+   Selector:                 app=python-app
+   Type:                     ClusterIP
+   IP Family Policy:         SingleStack
+   IP Families:              IPv4
+   IP:                       10.96.163.6
+   IPs:                      10.96.163.6
+   Port:                     <unset>  8080/TCP
+   TargetPort:               5000/TCP
+   Endpoints:                10.244.0.8:5000
+   Session Affinity:         None
+   Internal Traffic Policy:  Cluster
+   Events:                   <none>
+```
 
-   > Labels:                   <none>
-
-   > Annotations:              <none>
-
-   > Selector:                 app=python-app
-
-   > Type:                     ClusterIP
-
-   > IP Family Policy:         SingleStack
-
-   > IP Families:              IPv4
-
-   > IP:                       10.96.163.6
-
-   > IPs:                      10.96.163.6
-
-   > Port:                     <unset>  8080/TCP
-
-   > TargetPort:               5000/TCP
-
-   > Endpoints:                10.244.0.8:5000
-
-   > Session Affinity:         None
-
-   > Internal Traffic Policy:  Cluster
-
-   > Events:                   <none>
+</details>
 
 ## 7 - Expose the application
 
@@ -1015,9 +1018,10 @@ spec:
 kubectl get ingressclass
 ```
 
-   > NAME    CONTROLLER             PARAMETERS   AGE
-
-   > **nginx**   k8s.io/ingress-nginx   <none>       23h
+```bash result
+   NAME    CONTROLLER             PARAMETERS   AGE
+   nginx   k8s.io/ingress-nginx   <none>       23h
+```
 
 * it is nginx
 
@@ -1027,15 +1031,20 @@ vim k8s/ingress.yaml
 
 our [k8s/ingress.yaml](k8s/ingress.yaml)
 
-* edit [etc/hosts](/Windows/System32/drivers/etc/hosts) as admin (ex blocnotes), add our host at the end
+* edit [/etc/hosts](/Windows/System32/drivers/etc/hosts) as admin (ex blocnotes), add our host at the end
+
+<details> <summary>[/etc/hosts](/Windows/System32/drivers/etc/hosts)</summary>
 
 ```txt
 # Copyright (c) 1993-2009 Microsoft Corp.
 #
 # This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
 #
+....
 127.0.0.1 python-app.test.com
 ```
+
+</details>
 
 * save the /etc/hosts
 
@@ -1045,7 +1054,9 @@ our [k8s/ingress.yaml](k8s/ingress.yaml)
 kubectl apply -f k8s/ingress.yaml
 ```
 
-   > ingress.networking.k8s.io/python-app created
+```bash result
+   ingress.networking.k8s.io/python-app created
+```
 
 * check our ingress
 
@@ -1053,9 +1064,10 @@ kubectl apply -f k8s/ingress.yaml
 kubectl get ing
 ```
 
-   > NAME         CLASS   HOSTS                 ADDRESS   PORTS   AGE
-
-   > python-app   nginx   python-app.test.com             80      18s
+```bash result
+   NAME         CLASS   HOSTS                 ADDRESS   PORTS   AGE
+   python-app   nginx   python-app.test.com             80      18s
+```
 
 * check our aplication
 * **it is created on port 80, and visible in our host browser at http://python-app.test.com/**
@@ -1065,12 +1077,26 @@ kubectl get ing
 ```bash
 cd k8s
 kubectl delete -f ingress.yaml
+```
+
+```bash result
   ingress.networking.k8s.io "python-app" deleted from default namespace
-k8s$ kubectl delete -f service.yaml
+```
+
+```bash
+kubectl delete -f service.yaml
+```
+
+```bash result
   service "python-app" deleted from default namespace
-k8s$ kubectl delete -f deploy.yaml
+```
+
+```bash
+kubectl delete -f deploy.yaml
+```
+
+```bash result
   deployment.apps "python-app" deleted from default namespace
-cd ..
 ```
 
 # Helm
@@ -1091,10 +1117,17 @@ cd ~/src/backstage/pyhton-app/
 
 ```bash
 kubectl delete -f k8s/ingress.yaml -f k8s/service.yaml -f k8s/deploy.yaml
+```
+
+<details> <summary>results</summary>
+
+```bash result
   ingress.networking.k8s.io "python-app" deleted from default namespace
   service "python-app" deleted from default namespace
   deployment.apps "python-app" deleted from default namespace
 ```
+
+</details>
 
 * 127.0.0.1 python-app.test.com is still configured in [etc/hosts](/Windows/System32/drivers/etc/hosts)
 
@@ -1102,6 +1135,9 @@ kubectl delete -f k8s/ingress.yaml -f k8s/service.yaml -f k8s/deploy.yaml
 
 ```bash
 docker ps # check mapping 80->80 443->443 38275->6443
+```
+
+```bash result
   CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
   685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
 ```
@@ -1110,21 +1146,35 @@ docker ps # check mapping 80->80 443->443 38275->6443
 
 ```bash
 kubectl cluster-info --context kind-kind
+```
+
+<details> <summary>results</summary>
+
+```bash result
   Kubernetes control plane is running at https://127.0.0.1:XXXXX
   CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
+</details>
+
 * Ingress nginx controller is running
 
 ```bash
-kubectl get pods -n ingress-nginx 
+kubectl get pods -n ingress-nginx
+```
+
+<details> <summary>results</summary>
+
+```bash result
   NAME                                        READY   STATUS      RESTARTS   AGE
   ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
   ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
   ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
 ```
+
+</details>
 
 ## Helm Installation
 
@@ -1133,12 +1183,19 @@ kubectl get pods -n ingress-nginx
 
 ```bash
 sudo apt-get install curl gpg apt-transport-https --yes
-  curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-  echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-  sudo apt-get update
-  sudo apt-get install helm
-....
+curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```
+
+*wait for update and then helm installation*
+
+```bash
 helm version
+```
+
+```bash result
   version.BuildInfo{Version:"v3.19.2", GitCommit:"8766e718a0119851f10ddbe4577593a45fadf544", GitTreeState:"clean", GoVersion:"go1.24.9"}
 ```
 
@@ -1153,17 +1210,20 @@ mkdir charts; cd charts
 helm create python-app
 ```
 
-   > Creating python-app
+```bash result
+   Creating python-app
+```
 
-It has created a directory with a charts directory, it is our python-app charts.
+*It has created a directory with a charts directory, it is our python-app charts.*
 
 ```bash
 cd python-app
 ls
 ```
 
-   > Chart.yaml  charts  templates  values.yaml
-
+```bash result
+   Chart.yaml  charts  templates  values.yaml
+```
 
 * we need the three files Chart.yaml  templates  values.yaml
 * we look the template directory
@@ -1172,29 +1232,24 @@ ls
 charts/python-app-wsl2/$ ls -al templates
 ```
 
-   > total 24
-   > drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
+<details> <summary>results</summary>
 
-   > drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
+```bash result
+   total 24
+   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
+   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
+   -rwxrwxrwx 1 lucile lucile 2850 Nov 19 15:11 NOTES.txt
+   -rwxrwxrwx 1 lucile lucile 1862 Nov 19 15:11 _helpers.tpl
+   -rwxrwxrwx 1 lucile lucile 2420 Nov 19 15:11 deployment.yaml
+   -rwxrwxrwx 1 lucile lucile 1015 Nov 19 15:11 hpa.yaml
+   -rwxrwxrwx 1 lucile lucile  969 Nov 19 15:11 httproute.yaml
+   -rwxrwxrwx 1 lucile lucile 1112 Nov 19 15:11 ingress.yaml
+   -rwxrwxrwx 1 lucile lucile  385 Nov 19 15:11 service.yaml
+   -rwxrwxrwx 1 lucile lucile  405 Nov 19 15:11 serviceaccount.yaml
+   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
+```
 
-   > -rwxrwxrwx 1 lucile lucile 2850 Nov 19 15:11 NOTES.txt
-
-   > -rwxrwxrwx 1 lucile lucile 1862 Nov 19 15:11 _helpers.tpl
-
-   > -rwxrwxrwx 1 lucile lucile 2420 Nov 19 15:11 deployment.yaml
-
-   > -rwxrwxrwx 1 lucile lucile 1015 Nov 19 15:11 hpa.yaml
-
-   > -rwxrwxrwx 1 lucile lucile  969 Nov 19 15:11 httproute.yaml
-
-   > -rwxrwxrwx 1 lucile lucile 1112 Nov 19 15:11 ingress.yaml
-
-   > -rwxrwxrwx 1 lucile lucile  385 Nov 19 15:11 service.yaml
-
-   > -rwxrwxrwx 1 lucile lucile  405 Nov 19 15:11 serviceaccount.yaml
-
-   > drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
-
+</details>
 
 ### Configure
 
@@ -1214,9 +1269,17 @@ we must have the same sort of configuration we did in k8s/, we adapt the values.
 ```bash
 # get className of ingress
 kubectl get ingressclass
+```
+
+```bash result
   NAME    CONTROLLER             PARAMETERS   AGE
   nginx   k8s.io/ingress-nginx   <none>       23h
-# it is nginx
+  # it is nginx
+```
+
+* Edit python-app chart values.yaml
+
+```bash
 charts/python-app$ vim values.yaml
 ```
 
@@ -1225,8 +1288,12 @@ our [charts/python-app/values.yaml](charts/python-app/values.yaml)
 ## Install our helm chart service, deployment and ingress with heml
 
 ```bash
-
 charts/python-app$ helm install python-app --create-namespace -n python .
+```
+
+<details> <summary>results</summary>
+
+```bash result
   NAME: python-app
   LAST DEPLOYED: Fri Nov 21 15:43:04 2025
   NAMESPACE: python
@@ -1238,27 +1305,28 @@ charts/python-app$ helm install python-app --create-namespace -n python .
     http://python-app.test.com/
 ```
 
+</details>
+
 * Got python name space now
 
 ```bash
 kubectl get ns
 ```
 
-   > NAME                 STATUS   AGE
+<details> <summary>results</summary>
 
-   > default              Active   9h
+```bash result
+   NAME                 STATUS   AGE
+   default              Active   9h
+   ingress-nginx        Active   9h
+   kube-node-lease      Active   9h
+   kube-public          Active   9h
+   kube-system          Active   9h
+   local-path-storage   Active   9h
+   python               Active   3m30s
+```
 
-   > ingress-nginx        Active   9h
-
-   > kube-node-lease      Active   9h
-
-   > kube-public          Active   9h
-
-   > kube-system          Active   9h
-
-   > local-path-storage   Active   9h
-
-   > python               Active   3m30s
+</details>
 
 * Got nginx 
 
@@ -1266,9 +1334,10 @@ kubectl get ns
 kubectl get ing -n python
 ```
 
-   > NAME         CLASS   HOSTS                 ADDRESS     PORTS   AGE
-
-   >python-app   nginx   python-app.test.com   localhost   80      4m43s
+```bash result
+   NAME         CLASS   HOSTS                 ADDRESS     PORTS   AGE
+   python-app   nginx   python-app.test.com   localhost   80      4m43s
+```
 
 * Got 1/1 ready and Running pod in python namespace
 
@@ -1276,10 +1345,10 @@ kubectl get ing -n python
 kubectl get pods -n python
 ```
 
-   > NAME                        READY   STATUS    RESTARTS        AGE
-
-   > python-app-d9b9cd5f-22cx6   1/1     Running   7 (2m54s ago)   11m
-
+```bash result
+   NAME                        READY   STATUS    RESTARTS        AGE
+   python-app-d9b9cd5f-22cx6   1/1     Running   7 (2m54s ago)   11m
+```
 
 * Got kind-control-plane  Ready in in python namespace
 
@@ -1287,10 +1356,10 @@ kubectl get pods -n python
 kubectl get nodes -n python
 ```
 
-   > NAME                 STATUS   ROLES           AGE   VERSION
-
-   > kind-control-plane   Ready    control-plane   26h   v1.34.0
-
+```bash result
+   NAME                 STATUS   ROLES           AGE   VERSION
+   kind-control-plane   Ready    control-plane   26h   v1.34.0
+```
 
 * Got python-app service on port 5000
 
@@ -1298,10 +1367,10 @@ kubectl get nodes -n python
 kubectl get services -n python
 ```
 
-   > NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-
-   > python-app   ClusterIP   10.96.86.124   <none>        5000/TCP   10m
-
+```bash result
+   NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+   python-app   ClusterIP   10.96.86.124   <none>        5000/TCP   10m
+```
 
 * Got deployment READY 1/1 & Available
 
@@ -1309,10 +1378,11 @@ kubectl get services -n python
 kubectl get deployment -n python
 ```
 
-   > NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+```bash result
 
-   > python-app   1/1     1            1           8m18s
-
+   NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+   python-app   1/1     1            1           8m18s
+```
 
 * Got all : ingress,pods,nodes,services,deploments and secrets at once
 
@@ -1327,8 +1397,9 @@ cd ~/charts/python-app
 helm uninstall python-app -n python
 ```
 
-   > release "python-app" uninstalled
-
+```bash result
+   release "python-app" uninstalled
+```
 
 * Verify, it is gone, pod terminated
 
@@ -1336,21 +1407,26 @@ helm uninstall python-app -n python
 kubectl get ing,po,no,svc,deployment,secrets -n python
 ```
 
-   > NAME                            READY   STATUS        RESTARTS   AGE
+<details> <summary>results</summary>
 
-   > pod/python-app-d9b9cd5f-85m6l   1/1     Terminating   0          34s
+```bash result
+   NAME                            READY   STATUS        RESTARTS   AGE
+   pod/python-app-d9b9cd5f-85m6l   1/1     Terminating   0          34s
    
-   > NAME                      STATUS   ROLES           AGE    VERSION
+   NAME                      STATUS   ROLES           AGE    VERSION
+   node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0
+```
 
-   > node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0
+</details>
 
 ```bash
 kubectl get no --context kind-kind
 ```
 
-   > NAME                      STATUS   ROLES           AGE    VERSION
-
-   > node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0  
+```bash result
+   NAME                      STATUS   ROLES           AGE    VERSION
+   node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0  
+```
 
 ## ArgoCD
 
@@ -1365,16 +1441,18 @@ kubectl get no --context kind-kind
 helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
-   > "argo" has been added to your repositories
+```bash result
+   "argo" has been added to your repositories
+```
 
 ```bash
 helm repo ls
 ```
 
-   > NAME    URL
-
-   > argo    https://argoproj.github.io/argo-helm
-
+```bash result
+   NAME    URL
+   argo    https://argoproj.github.io/argo-helm
+```
 
 #### Create ArgoCD Heml Chart
 
@@ -1387,7 +1465,9 @@ cd charts; mkdir argocd; cd argocd
 vim values-argo.yaml
 ```
 
-```yaml
+<details> <summary>values-argo.yaml</summary>
+
+```yaml values-argo.yaml
 redis-ha:
   enabled: false
 
@@ -1417,45 +1497,45 @@ server:
     tls: true
 ```
 
+</details>
+
 #### Install ArgoCD Heml Chart
 
 ```bash
  helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f values-argo-org.yaml
 ```
 
-   > Release "argocd" has been upgraded. Happy Helming!
+<details> <summary>results</summary>
 
-   > NAME: argocd
-
-   > LAST DEPLOYED: Sun Nov 23 12:50:26 2025
-
-   > NAMESPACE: argocd
-
-   > STATUS: deployed
-
-   > REVISION: 2
-
-   > TEST SUITE: None
-
-   > NOTES:
-
-   > In order to access the server UI you have the following options:
-
-   > 1. kubectl port-forward service/argocd-server -n argocd 8080:443
-
-   >    and then open the browser on http://localhost:8080 and accept the certificate
+```bash result
    
-   > 2. enable ingress in the values file `server.ingress.enabled` and either
+   Release "argocd" has been upgraded. Happy Helming!
+   NAME: argocd
+   LAST DEPLOYED: Sun Nov 23 12:50:26 2025
+   NAMESPACE: argocd
+   STATUS: deployed
+   REVISION: 2
+   TEST SUITE: None
+   NOTES:
+   In order to access the server UI you have the following options:
 
-   >      - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+   1. kubectl port-forward service/argocd-server -n argocd 8080:443
+      and then open the browser on http://localhost:8080 and accept the certificate
 
-   >      - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
+   2. enable ingress in the values file `server.ingress.enabled` and either
 
-   > After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
+         - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+
+         - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
+
+   After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
    
-   > kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+   kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
    
-   >(You sh ould delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
+   (You sh ould delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
+```
+
+</details>
 
 #### Check ArgoCD Install
 
@@ -1465,21 +1545,20 @@ server:
 kubectl get pods -n argocd
 ```
 
-   > NAME                                                READY   STATUS    RESTARTS       AGE
+<details> <summary>results</summary>
 
-   > argocd-**application-controller-**0                     1/1     Running   0              3h22m
+```bash result
+   NAME                                                READY   STATUS    RESTARTS       AGE
+   argocd-**application-controller-**0                     1/1     Running   0              3h22m
+   argocd-**applicationset-controller**-5bd4b9d9c8-sgz7j   1/1     Running   0              3h22m
+   argocd-**dex-server**-86679756f6-8pf8k                  1/1     Running   0              3h22m
+   argocd-**notifications-controller**-6555f94d8b-96l7n    1/1     Running   0              3h22m
+   argocd-**redis**-57986d4b7d-zdhw7                       1/1     Running   0              3h22m
+   argocd-**repo-server**-65f76988cf-2hwn2                 1/1     Running   1 (122m ago)   3h22m
+   argocd-**server**-84d8757478-7dzwh                      1/1     Running   0              3h22m
+```
 
-   > argocd-**applicationset-controller**-5bd4b9d9c8-sgz7j   1/1     Running   0              3h22m
-
-   > argocd-**dex-server**-86679756f6-8pf8k                  1/1     Running   0              3h22m
-
-   > argocd-**notifications-controller**-6555f94d8b-96l7n    1/1     Running   0              3h22m
-
-   > argocd-**redis**-57986d4b7d-zdhw7                       1/1     Running   0              3h22m
-
-   > argocd-**repo-server**-65f76988cf-2hwn2                 1/1     Running   1 (122m ago)   3h22m
-
-   > argocd-**server**-84d8757478-7dzwh                      1/1     Running   0              3h22m
+</details>
 
 * Look ArgoCD ingress :
 
@@ -1487,9 +1566,10 @@ kubectl get pods -n argocd
 kubectl get ing -n argocd
 ```
 
-   > NAME            CLASS   HOSTS             ADDRESS     PORTS     AGE
-
-   > argocd-server   nginx   **argocd.test.com**   localhost   80, 443   3h22m
+```bash result
+   NAME            CLASS   HOSTS             ADDRESS     PORTS     AGE
+   argocd-server   nginx   argocd.test.com   localhost   80, 443   3h22m
+```
 
 * Look ingress, podsn nodesn services and deploments for argocd namespace :
 
@@ -1497,77 +1577,50 @@ kubectl get ing -n argocd
 kubectl get ing,po,no,svc,deployment,secrets -n argocd
 ```
 
-<details> <summary>infos</summary>
+<details> <summary>results</summary>
 
-   > NAME                                      CLASS   HOSTS             ADDRESS     PORTS     AGE
-
-   > ingress.networking.k8s.io/argocd-server   nginx   argocd.test.com   localhost   80, 443   3d22h
+```bash result
+   NAME                                      CLASS   HOSTS             ADDRESS     PORTS     AGE
+   ingress.networking.k8s.io/argocd-server   nginx   argocd.test.com   localhost   80, 443   3d22h
    
-   > NAME                                                    READY   STATUS    RESTARTS       AGE
+   NAME                                                    READY   STATUS    RESTARTS       AGE
+   pod/argocd-application-controller-0                     1/1     Running   2 (21h ago)    3d22h
+   pod/argocd-applicationset-controller-5bd4b9d9c8-sgz7j   1/1     Running   2 (21h ago)    3d22h
+   pod/argocd-dex-server-86679756f6-8pf8k                  1/1     Running   2 (21h ago)    3d22h
+   pod/argocd-notifications-controller-6555f94d8b-96l7n    1/1     Running   2 (21h ago)    3d22h
+   pod/argocd-redis-57986d4b7d-zdhw7                       1/1     Running   2 (21h ago)    3d22h
+   pod/argocd-repo-server-65f76988cf-2hwn2                 1/1     Running   71             3d22h
+   pod/argocd-server-84d8757478-7dzwh                      1/1     Running   11 (49m ago)   3d22h
 
-   > pod/argocd-application-controller-0                     1/1     Running   2 (21h ago)    3d22h
+   NAME                      STATUS   ROLES           AGE     VERSION
+   node/kind-control-plane   Ready    control-plane   6d20h   v1.34.0
 
-   > pod/argocd-applicationset-controller-5bd4b9d9c8-sgz7j   1/1     Running   2 (21h ago)    3d22h
+   NAME                                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+   service/argocd-applicationset-controller   ClusterIP   10.96.67.204    <none>        7000/TCP            3d22h
+   service/argocd-dex-server                  ClusterIP   10.96.254.118   <none>        5556/TCP,5557/TCP   3d22h
+   service/argocd-redis                       ClusterIP   10.96.170.5     <none>        6379/TCP            3d22h
+   service/argocd-repo-server                 ClusterIP   10.96.107.155   <none>        8081/TCP            3d22h
+   service/argocd-server                      ClusterIP   10.96.51.228    <none>        80/TCP,443/TCP      3d22h
 
-   > pod/argocd-dex-server-86679756f6-8pf8k                  1/1     Running   2 (21h ago)    3d22h
-
-   > pod/argocd-notifications-controller-6555f94d8b-96l7n    1/1     Running   2 (21h ago)    3d22h
-
-   > pod/argocd-redis-57986d4b7d-zdhw7                       1/1     Running   2 (21h ago)    3d22h
-
-   > pod/argocd-repo-server-65f76988cf-2hwn2                 1/1     Running   71             3d22h
-
-   > pod/argocd-server-84d8757478-7dzwh                      1/1     Running   11 (49m ago)   3d22h
-
-   > NAME                      STATUS   ROLES           AGE     VERSION
-
-   > node/kind-control-plane   Ready    control-plane   6d20h   v1.34.0
+   NAME                                               READY   UP-TO-DATE   AVAILABLE   AGE
+   deployment.apps/argocd-applicationset-controller   1/1     1            1           3d22h
+   deployment.apps/argocd-dex-server                  1/1     1            1           3d22h
+   deployment.apps/argocd-notifications-controller    1/1     1            1           3d22h
+   deployment.apps/argocd-redis                       1/1     1            1           3d22h
+   deployment.apps/argocd-repo-server                 1/1     1            1           3d22h
+   deployment.apps/argocd-server                      1/1     1            1           3d22h
    
-   > NAME                                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
-
-   > service/argocd-applicationset-controller   ClusterIP   10.96.67.204    <none>        7000/TCP            3d22h
-
-   > service/argocd-dex-server                  ClusterIP   10.96.254.118   <none>        5556/TCP,5557/TCP   3d22h
-
-   > service/argocd-redis                       ClusterIP   10.96.170.5     <none>        6379/TCP            3d22h
-
-   > service/argocd-repo-server                 ClusterIP   10.96.107.155   <none>        8081/TCP            3d22h
-
-   > service/argocd-server                      ClusterIP   10.96.51.228    <none>        80/TCP,443/TCP      3d22h
-
-   > NAME                                               READY   UP-TO-DATE   AVAILABLE   AGE
-
-   > deployment.apps/argocd-applicationset-controller   1/1     1            1           3d22h
-
-   > deployment.apps/argocd-dex-server                  1/1     1            1           3d22h
-
-   > deployment.apps/argocd-notifications-controller    1/1     1            1           3d22h
-
-   > deployment.apps/argocd-redis                       1/1     1            1           3d22h
-
-   > deployment.apps/argocd-repo-server                 1/1     1            1           3d22h
-
-   > deployment.apps/argocd-server                      1/1     1            1           3d22h
-   
-   > NAME                                  TYPE                 DATA   AGE
-
-   > secret/argocd-initial-admin-secret    Opaque               1      3d22h
-
-   > secret/argocd-notifications-secret    Opaque               0      3d22h
-
-   > secret/argocd-redis                   Opaque               1      3d22h
-
-   > secret/argocd-secret                  Opaque               5      3d22h
-
-   > secret/creds-731608270                Opaque               4      26m
-
-   > secret/repo-3812325848                Opaque               4      37m
-
-   > secret/sh.helm.release.v1.argocd.v1   helm.sh/release.v1   1      3d22h
-
-   > secret/sh.helm.release.v1.argocd.v2   helm.sh/release.v1   1      3d22h
-   
-   > secret/sh.helm.release.v1.argocd.v3   helm.sh/release.v1   1      3d18h
+   NAME                                  TYPE                 DATA   AGE
+   secret/argocd-initial-admin-secret    Opaque               1      3d22h
+   secret/argocd-notifications-secret    Opaque               0      3d22h
+   secret/argocd-redis                   Opaque               1      3d22h
+   secret/argocd-secret                  Opaque               5      3d22h
+   secret/creds-731608270                Opaque               4      26m
+   secret/repo-3812325848                Opaque               4      37m
+   secret/sh.helm.release.v1.argocd.v1   helm.sh/release.v1   1      3d22h
+   secret/sh.helm.release.v1.argocd.v2   helm.sh/release.v1   1      3d22h
+   secret/sh.helm.release.v1.argocd.v3   helm.sh/release.v1   1      3d18h
+```
 
 </details>
 
@@ -1608,3 +1661,5 @@ git commit -a -m "argo with https"
 git push origin
 
 ```
+
+#### 
