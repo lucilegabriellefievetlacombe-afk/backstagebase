@@ -480,6 +480,7 @@ docker images
 ```
 
 <details> <summary>results</summary>
+
 ```bash result
 IMAGE                                                                                  ID             DISK USAGE   CONTENT SIZE   EXTRA
 luspokvenus/python-app:v2                                                              69e0e97ff0a2        109MB         26.7MB    U
@@ -571,7 +572,6 @@ kind create cluster
 ```bash
    kubectl cluster-info --context kind-kind
 ```
-
 
 <details> <summary>results</summary>
 
@@ -743,11 +743,13 @@ kubectl cluster-info
 ```
 
 <details> <summary>results</summary>
+
 ```bash result
    Kubernetes control plane is running at https://127.0.0.1:XXXXX
    CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
    To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
+
 </details>
 
 * check url in the browser (allow exeption)
@@ -1495,7 +1497,7 @@ kubectl get ns
 
 </details>
 
-* Got nginx 
+* Got nginx
 
 ```bash
 kubectl get ing -n python
@@ -1874,3 +1876,5 @@ git push origin
 * git
 * no login/password
   
+![alt text](image.png)
+![alt text](image-1.png)
