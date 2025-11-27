@@ -1888,6 +1888,8 @@ git push origin
 * https
 * git
 * no login/password
-  
-![repos](docs/images/argocd_repos.pngimage.png)
+
+<small>
+![repos](docs/images/argocd_repos.png)
 ![add your repo](docs/images/add-argocd-http-repo.png)
+</small>
