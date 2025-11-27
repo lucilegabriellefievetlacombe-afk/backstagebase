@@ -376,9 +376,11 @@ docker exec -ti 68c20a82c9db sh
    / #
 ```
 
+*you are in the pod term*
+
 </details>
 
-*you are in the pod term*
+
 
 * add curl to check 5000 from the container
 
@@ -532,21 +534,22 @@ sudo mv ./kind /usr/local/bin/kind
 
 ```bash
 kind --version
-    kind version 0.30.0
 ```
+
+<details> <summary>results</summary>
+
+```bash result
+   kind version 0.30.0
+```
+
+</details>
 
 ### Create local k8s cluster
 
 * try kind :
   * create cluster
 
-```bash
-kind --version
-```
 
-```bash result
-   kind version 0.30.0
-```
 
 ```bash
 kind create cluster
@@ -738,7 +741,17 @@ kubectl get pods pod1
 kind delete cluster
 kind create cluster
 kubectl get pods
-  No resources found in default namespace.
+```
+
+<details> <summary>results</summary>
+
+```bash result
+   No resources found in default namespace.
+```
+
+</details>
+
+```bash
 kubectl cluster-info
 ```
 
@@ -1876,5 +1889,5 @@ git push origin
 * git
 * no login/password
   
-![alt text](image.png)
-![alt text](image-1.png)
+![repos](docs/images/argocd_repos.pngimage.png)
+![add your repo](docs/images/add-argocd-http-repo.png)
