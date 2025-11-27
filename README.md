@@ -1891,7 +1891,6 @@ git push origin
 
 |action | repos | create | delete |
 |------ |-----  |------  |------  | 
-| Argo repo  | ![repos](docs/images/argocd_repos.png)| ![add your repo](docs/images/add-argocd-http-repo.png) | ![disconnect](docs/images/disconnect-repo.png)  |
-
-| Argo appli | ![alt text](docs/images/argocd_applis.png.png) | ![alt text](docs/images/create-application.png) | ![alt text](docs/images/delete-application.png.png) |
+| Argo repo  | ![repos](docs/images/argocd_repos.png)| ![add repo](docs/images/add-argocd-http-repo.png) | ![disconnect](docs/images/disconnect-repo.png)  |
+| Argo appli | ![applis](docs/images/argocd_applis.png.png) | ![create appli](docs/images/create-application.png) | ![delete](docs/images/delete-application.png.png) |
 | CI/CD Action Setting | ![CI/CD Action Settings](docs/images/cicd_action_setting.png) |  |  |
