@@ -1889,7 +1889,7 @@ git push origin
 * git
 * no login/password
 
-<small>
-![repos](docs/images/argocd_repos.png)
-![add your repo](docs/images/add-argocd-http-repo.png)
-</small>
+|action | image | image |
+|------ |-----  |------ |
+| Add Argo repo  | ![repos](docs/images/argocd_repos.png)| ![add your repo](docs/images/add-argocd-http-repo.png) |
+| CI/CD Action Setting | ![CI/CD Action Settings](docs/images/cicd_action_setting.png) |                          |
