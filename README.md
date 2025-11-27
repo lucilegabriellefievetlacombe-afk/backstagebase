@@ -1233,12 +1233,11 @@ kubectl get deployment -n python
    > python-app   1/1     1            1           8m18s
 
 
-* Got all : ing,po,no,deploment at once
+* Got all : ingress,pods,nodes,services,deploments and secrets at once
 
 ```bash
-kubectl get ing,po,no,svc,deployment -n python
+kubectl get ing,po,no,svc,deployments,secrets -n python
 ```
-
 
 ## Clean helm chart deployment
 
@@ -1253,7 +1252,7 @@ helm uninstall python-app -n python
 * Verify, it is gone, pod terminated
 
 ```bash
-kubectl get ing,po,no,svc,deployment -n python
+kubectl get ing,po,no,svc,deployment,secrets -n python
 ```
 
    > NAME                            READY   STATUS        RESTARTS   AGE
@@ -1263,7 +1262,7 @@ kubectl get ing,po,no,svc,deployment -n python
    > node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0
 
 ```bash
-kubectl get ing,po,no,svc,deployment -n python
+kubectl get no --context kind-kind
 ```
 
    > NAME                      STATUS   ROLES           AGE    VERSION
@@ -1275,7 +1274,9 @@ kubectl get ing,po,no,svc,deployment -n python
 [Argo Proj - helm](https://github.com/argoproj/argo-helm)
 [Argo-helm argo-cd charts](https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/README.md)
 
-### Install
+### ArgoCD Install
+
+#### Add Heml Argo Repo
 
 ```bash
 helm repo add argo https://argoproj.github.io/argo-helm
@@ -1290,6 +1291,12 @@ helm repo ls
    > NAME    URL
    > argo    https://argoproj.github.io/argo-helm
 
+
+#### Create ArgoCD Heml Chart
+
+```bash
+cd ~/src/backstage/pyhton-app/
+```
 
 ```bash
 cd charts; mkdir argocd; cd argocd
@@ -1323,29 +1330,85 @@ vim values-argo.yaml
 >     enabled: true
 >     ingressClassName: nginx
 
+#### Install ArgoCD Heml Chart
+
 ```bash
  helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f values-argo-org.yaml
 ```
 
-> Release "argocd" has been upgraded. Happy Helming!
-> NAME: argocd
-> LAST DEPLOYED: Sun Nov 23 12:50:26 2025
-> NAMESPACE: argocd
-> STATUS: deployed
-> REVISION: 2
-> TEST SUITE: None
-> NOTES:
-> In order to access the server UI you have the following options:
-> 1. kubectl port-forward service/argocd-server -n argocd 8080:443
->    and then open the browser on http://localhost:8080 and accept the certificate
->
-> 2. enable ingress in the values file `server.ingress.enabled` and either
->      - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
->      - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
+   > Release "argocd" has been upgraded. Happy Helming!
+   > NAME: argocd
+   > LAST DEPLOYED: Sun Nov 23 12:50:26 2025
+   > NAMESPACE: argocd
+   > STATUS: deployed
+   > REVISION: 2
+   > TEST SUITE: None
+   > NOTES:
+   > In order to access the server UI you have the following options:
+   > 1. kubectl port-forward service/argocd-server -n argocd 8080:443
+   >    and then open the browser on http://localhost:8080 and accept the certificate
+   >
+   > 2. enable ingress in the values file `server.ingress.enabled` and either
+   >      - Add the annotation for ssl passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+   >      - Set the `configs.params."server.insecure"` in the values file and terminate SSL at your ingress: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-multiple-ingress-objects-and-hosts
 
->
-> After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
->
-> kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
->
->(You sh ould delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
+   >
+   > After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
+   >
+   > kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+   >
+   >(You sh ould delete the initial secret afterwards as suggested by the Getting Started Guide: https://argo-cd.readthedocs.io/en/stable/getting_started/#4-login-using-the-cli)
+
+#### Check ArgoCD Install
+
+* Look ArgoCD pods :
+
+```bash
+kubectl get pods -n argocd
+```
+
+   > NAME                                                READY   STATUS    RESTARTS       AGE
+   > argocd-**application-controller-**0                     1/1     Running   0              3h22m
+   > argocd-**applicationset-controller**-5bd4b9d9c8-sgz7j   1/1     Running   0              3h22m
+   > argocd-**dex-server**-86679756f6-8pf8k                  1/1     Running   0              3h22m
+   > argocd-**notifications-controller**-6555f94d8b-96l7n    1/1     Running   0              3h22m
+   > argocd-**redis**-57986d4b7d-zdhw7                       1/1     Running   0              3h22m
+   > argocd-**repo-server**-65f76988cf-2hwn2                 1/1     Running   1 (122m ago)   3h22m
+   > argocd-**server**-84d8757478-7dzwh                      1/1     Running   0              3h22m
+
+* Look ArgoCD ingress :
+
+```bash
+kubectl get ing -n argocd
+```
+
+   > NAME            CLASS   HOSTS             ADDRESS     PORTS     AGE
+   > argocd-server   nginx   **argocd.test.com**   localhost   80, 443   3h22m
+
+* Look ingress, podsn nodesn services and deploments for argocd namespace :
+
+```bash
+kubectl get ing,po,no,svc,deployment,secrets -n argocd
+```
+
+* look directly https//argocd.test.com on our host won't work
+* add it in [etc/hosts](/Windows/System32/drivers/etc/hosts) as admin
+* ArgoCD is publihsed https//argocd.test.com on our host
+
+* Recall - See all
+  
+```bash
+kubectl cluster-info
+kubectl cluster-info --context kind-kind
+kubectl get ing,po, no,svc,deployment -n ingress-nginx
+kubectl get ing,po,no,svc,deployment -n python
+helm repo ls
+ 1486  kubectl get pods -n python -l "app.kubernetes.io/instance=python-app"
+ 1487  cd charts/argocd/
+ 1488  kubectl get pods -n argocd
+ 1489  kubectl get secrets -n argocd
+ 1490  kubectl get secrets -n argocd argocd-initial-admin-secret -o yaml
+ 1491  echo "WUNtM0FDbjdobjQ5Ny1law==" | base64 -d
+ 1492  git status
+ 1493  git commit -a -m "argo with https"
+ 1494  git push origin
