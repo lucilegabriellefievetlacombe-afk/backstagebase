@@ -201,12 +201,15 @@ and integrate systems more effectively
 
 </details>
 
-[Ricardo Andrea Gonzalez Gomez](https://squad.udemy.com/user/ricardo-andre-gonzalez-gomez/)
+
+<details> <summary>[Ricardo Andrea Gonzalez Gomez](https://squad.udemy.com/user/ricardo-andre-gonzalez-gomez/)</summary>
 
 * DevOps Engineer & SysAdmin.
 * Cloud Architect & Linux Specialist.
 * Red Hat Certified Engineer.
 * Red Hat Certified System Administrator.
+
+</details>
 
 ## Intro
 
@@ -241,8 +244,10 @@ Join now and get ahead in the future of DevOps & Platform Engineering!
 ### Requirements
 
 * docker is working
-* pyhon 3 and pip are working
-* we have an account on github
+* pyhon3 and pip are working
+* a linux ubuntu, on wsl2, docker somewhere, wmare... or on bare-metal
+* we have your own account on github (*your-own-account*)
+* an editor, like vs code or vim (*examples are given with vim to make it old seems old school*)
 
 ### Steps
 
@@ -258,20 +263,24 @@ Join now and get ahead in the future of DevOps & Platform Engineering!
   * argo cd
 * automate de deployment of the application through a CD pipeline DNS using GitHub actions
 
-## Application Code
+## Original Application Code
 
 https://github.com/ricardoandre97/python-app
 
-###
+### Create your repository from scatch or from course
 
 ```bash
 mkdir -p ~/src/backstage; cd ~/src/backstage
 git clone https://github.com/ricardoandre97/python-app.git .
 cd python-app
-export PROJ=`pwd`
+git remote -v
+git remote remove origin
+git remote add origin https://github.com/your-own-account/backstage.git
 ```
 
-### writing Dockerfile in ${PROJ}/Dockerfile
+### writing Application Dockerfile in ${PROJ}/Dockerfile
+
+<details> <summary>Dockerfile</summary>
 
 ```dockerfile
 
@@ -287,11 +296,15 @@ CMD python /src/app.py
 
 ```
 
-### writing code in ${PROJ}/src/app.py
+</details>
 
-using flask, jsonify, datetime, socket
+### Writing Application Python Code in ${PROJ}/src/app.py
 
-```python
+*Using flask, jsonify, datetime and sockets*
+
+<details> <summary>app.py Code</summary>
+
+```python app.py
 
 from flask import Flask, jsonify
 import datetime
@@ -312,13 +325,15 @@ if __name__ == '__main__':
     app.run() # will works with python only
 ```
 
+</details>
+
 ### try on directly on host
 
 ```bash
 python src/app.py 
 ```
 
-* works on host localhost:5000
+* works on host [localhost:5000](http://localhost:5000)
 
 ### build image, see it
 
@@ -326,6 +341,17 @@ python src/app.py
 docker build -t python-app:v1 .
 docker images
 ```
+
+<details> <summary>results</summary>
+
+```bash result
+IMAGE                                                                                  ID             DISK USAGE   CONTENT SIZE   EXTRA
+
+python-app:v1                                                                          69e0e97ff0a2        109MB         26.7MB    U
+python:3.11-alpine                                                                     610ede222c1f       83.3MB         20.2MB
+```
+
+</details>
 
 ### start the container, see it
 
@@ -344,10 +370,15 @@ docker ps
 docker exec -ti 68c20a82c9db sh 
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    / #
 ```
-*you are in the pod tty*
+
+</details>
+
+*you are in the pod term*
 
 * add curl to check 5000 from the container
 
@@ -363,10 +394,14 @@ curl http://localhost:5000
 ip a
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    ...
    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
 ```
+
+</details>
 
 ```bash
 curl http://172.17.0.2:5000 
@@ -424,8 +459,14 @@ docker tag pyhton-app:v2 ${TheLogin}/pyhton-app:v2
 docker login -u ${TheLogin}
 ```
 
-   > Password: # enter TheAccessToken
-   >  Login Succeeded
+<details> <summary>results</summary>
+
+```bash result
+   Password: # enter TheAccessToken
+      Login Succeeded
+```
+
+</details>
 
 * Push your image
 * Build for amd64
@@ -435,7 +476,17 @@ docker login -u ${TheLogin}
 docker push ${TheLogin}/pyhton-app:v2
 docker build --platform linux/amd64 -t ${TheLogin}/getting-started .
 docker push ${TheLogin}/pyhton-app
+docker images
 ```
+
+<details> <summary>results</summary>
+```bash result
+IMAGE                                                                                  ID             DISK USAGE   CONTENT SIZE   EXTRA
+luspokvenus/python-app:v2                                                              69e0e97ff0a2        109MB         26.7MB    U
+python-app:v2                                                                          69e0e97ff0a2        109MB         26.7MB    U
+python:3.11-alpine
+```
+</details>
 
 ## 1 - Get Kind our Kubernetes Local Cluster
 
@@ -448,7 +499,15 @@ docker push ${TheLogin}/pyhton-app
 uname -m
 ```
 
-   > x86_64
+<details> <summary>results</summary>
+
+```bash result
+   x86_64
+```
+
+*depending on your host*
+
+</details>
 
 * get kind bin
 * check sha256 signature
@@ -492,6 +551,8 @@ kind --version
 kind create cluster
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    Creating cluster "kind" ...
       ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
@@ -505,17 +566,26 @@ kind create cluster
       kubectl cluster-info --context kind-kind
 ```
 
+</details>
+
 ```bash
    kubectl cluster-info --context kind-kind
 ```
+
+
+<details> <summary>results</summary>
 
 ```bash result
   Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
 ```
 
+</details>
+
 ```bash
 kubectl cluster-info --context kind-kind
 ```
+
+<details> <summary>results</summary>
 
 ```bash result
    Kubernetes control plane is running at https://127.0.0.1:41881
@@ -523,6 +593,8 @@ kubectl cluster-info --context kind-kind
 
    To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'
 ```
+
+</details>
 
 * try it in your brower : 
   * https://127.0.0.1:41881/
@@ -670,11 +742,13 @@ kubectl get pods
 kubectl cluster-info
 ```
 
+<details> <summary>results</summary>
 ```bash result
    Kubernetes control plane is running at https://127.0.0.1:XXXXX
    CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
    To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
+</details>
 
 * check url in the browser (allow exeption)
   * https://127.0.0.1:XXXX
@@ -684,10 +758,14 @@ kubectl cluster-info
 docker ps
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
    8c5b3017face   kindest/node:v1.34.0   "/usr/local/bin/entr…"   26 minutes ago   Up 25 minutes   127.0.0.1:36447->6443/tcp   kind-control-plane
 ```
+
+</details>
 
 * Get namespaces
 
@@ -757,9 +835,13 @@ EOF
 kubectl cluster-info --context kind-kind
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
 ```
+
+</details>
 
 * Check kindest/node mapping
 
@@ -767,10 +849,14 @@ kubectl cluster-info --context kind-kind
 docker ps # check mapping 80->80 443->443 38275->6443
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
    685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
 ```
+
+</details>
 
 ## 4 - Deploy our nginx pod
 
@@ -811,13 +897,15 @@ kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.
 kubectl cluster-info
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    Kubernetes control plane is running at https://127.0.0.1:XXXXX
-
    CoreDNS is running at https://127.0.0.1:XXXXX/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
    To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
+
+</details>
 
 * Check pods in ingress-nginx name space
 * Check ingress nginx controller is running
@@ -826,12 +914,16 @@ kubectl cluster-info
 kubectl get pods -n ingress-nginx 
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME                                        READY   STATUS      RESTARTS   AGE
    ingress-nginx-admission-create-8mv4f        0/1     Completed   0          108s
    ingress-nginx-admission-patch-lrhxr         0/1     Completed   0          108s
    ingress-nginx-controller-68697cf9d9-pxg9n   1/1     Running     0          108s
 ```
+
+</details>
 
 ## 5 - Configuration of ingress-nginx
 
@@ -840,7 +932,9 @@ kubectl get pods -n ingress-nginx
   * https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend
   * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment
 
-```yaml
+<details> <summary>Yaml Ingress-Inginx for k8s</summary>
+
+```yaml nginx-ingress
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -864,6 +958,8 @@ spec:
         - containerPort: 80
 ```
 
+</details>
+
 * into k8s/deploy.yam
 * change app name fron *nginx* to **python-app** for example
 * extend app name modification in spec selector and template
@@ -883,9 +979,13 @@ our [k8s/deploy.yaml](k8s/deploy.yaml)
 kubectl apply -f k8s/deploy.yaml
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    deployment.apps/python-app created
 ```
+
+</details>
 
 * check deployment
 
@@ -893,10 +993,14 @@ kubectl apply -f k8s/deploy.yaml
 kubectl get deployments
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME         READY   UP-TO-DATE   AVAILABLE   AGE
    python-app   1/1     1            1           101s
 ```
+
+</details>
 
 ## 6 - Create k8s Services
 
@@ -905,6 +1009,9 @@ how do we access our deployed application via broswer ?
 * copy definig a service
   * https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
   * https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/service/simple-service.yaml
+
+
+<details> <summary>Yaml kind Application service  for k8s</summary>
 
 ```yaml
 apiVersion: v1
@@ -919,6 +1026,8 @@ spec:
       port: 80
       targetPort: 9376
 ```
+
+</details>
 
 * copy it inside k8s/service.yaml
 * change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
@@ -936,9 +1045,13 @@ our [k8s/service.yaml](k8s/service.yaml)
 kubectl apply -f k8s/service.yaml
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    service/python-app created
 ```
+
+</details>
 
 * check service
 
@@ -946,11 +1059,15 @@ kubectl apply -f k8s/service.yaml
 kubectl get svc
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
    kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP    3h7m
    python-app   ClusterIP   10.96.163.6   <none>        8080/TCP   3m20s
 ```
+
+</details>
 
 * check forwarding, look for endpoints, one is enough
 
@@ -987,6 +1104,9 @@ kubectl describe svc python-app
   * https://kind.sigs.k8s.io/docs/user/ingress/
   * https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
 
+
+<details> <summary>Yaml ingress networking for k8s</summary>
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -1008,6 +1128,8 @@ spec:
               number: 80
 ```
 
+</details>
+
 * copy it inside k8s/ingress.yaml
 * change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
 * check ingressClassName with kubectl get ingressclassname (not really necessary because we have just one - can remove this line) 
@@ -1018,10 +1140,14 @@ spec:
 kubectl get ingressclass
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME    CONTROLLER             PARAMETERS   AGE
    nginx   k8s.io/ingress-nginx   <none>       23h
 ```
+
+</details>
 
 * it is nginx
 
@@ -1054,9 +1180,13 @@ our [k8s/ingress.yaml](k8s/ingress.yaml)
 kubectl apply -f k8s/ingress.yaml
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    ingress.networking.k8s.io/python-app created
 ```
+
+</details>
 
 * check our ingress
 
@@ -1064,10 +1194,14 @@ kubectl apply -f k8s/ingress.yaml
 kubectl get ing
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME         CLASS   HOSTS                 ADDRESS   PORTS   AGE
    python-app   nginx   python-app.test.com             80      18s
 ```
+
+</details>
 
 * check our aplication
 * **it is created on port 80, and visible in our host browser at http://python-app.test.com/**
@@ -1079,25 +1213,38 @@ cd k8s
 kubectl delete -f ingress.yaml
 ```
 
+
+<details> <summary>results</summary>
+
 ```bash result
   ingress.networking.k8s.io "python-app" deleted from default namespace
 ```
+
+</details>
 
 ```bash
 kubectl delete -f service.yaml
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
   service "python-app" deleted from default namespace
 ```
+
+</details>
 
 ```bash
 kubectl delete -f deploy.yaml
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
   deployment.apps "python-app" deleted from default namespace
 ```
+
+</details>
 
 # Helm
 
@@ -1137,10 +1284,14 @@ kubectl delete -f k8s/ingress.yaml -f k8s/service.yaml -f k8s/deploy.yaml
 docker ps # check mapping 80->80 443->443 38275->6443
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
   CONTAINER ID   IMAGE                  COMMAND                  CREATED       STATUS       PORTS                                                                 NAMES
   685317923bcd   kindest/node:v1.34.0   "/usr/local/bin/entr…"   2 hours ago   Up 2 hours   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:38275->6443/tcp   kind-control-plane
 ```
+
+</details>
 
 * Local cluster kind is running
 
@@ -1195,9 +1346,13 @@ sudo apt-get install helm
 helm version
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
   version.BuildInfo{Version:"v3.19.2", GitCommit:"8766e718a0119851f10ddbe4577593a45fadf544", GitTreeState:"clean", GoVersion:"go1.24.9"}
 ```
+
+</details>
 
 ### Create our Chart under wls2 ubuntu
 
@@ -1210,9 +1365,13 @@ mkdir charts; cd charts
 helm create python-app
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    Creating python-app
 ```
+
+</details>
 
 *It has created a directory with a charts directory, it is our python-app charts.*
 
@@ -1221,9 +1380,13 @@ cd python-app
 ls
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    Chart.yaml  charts  templates  values.yaml
 ```
+
+</details>
 
 * we need the three files Chart.yaml  templates  values.yaml
 * we look the template directory
@@ -1271,11 +1434,15 @@ we must have the same sort of configuration we did in k8s/, we adapt the values.
 kubectl get ingressclass
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
   NAME    CONTROLLER             PARAMETERS   AGE
   nginx   k8s.io/ingress-nginx   <none>       23h
   # it is nginx
 ```
+
+</details>
 
 * Edit python-app chart values.yaml
 
@@ -1334,10 +1501,14 @@ kubectl get ns
 kubectl get ing -n python
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME         CLASS   HOSTS                 ADDRESS     PORTS   AGE
    python-app   nginx   python-app.test.com   localhost   80      4m43s
 ```
+
+</details>
 
 * Got 1/1 ready and Running pod in python namespace
 
@@ -1345,10 +1516,14 @@ kubectl get ing -n python
 kubectl get pods -n python
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME                        READY   STATUS    RESTARTS        AGE
    python-app-d9b9cd5f-22cx6   1/1     Running   7 (2m54s ago)   11m
 ```
+
+</details>
 
 * Got kind-control-plane  Ready in in python namespace
 
@@ -1356,10 +1531,14 @@ kubectl get pods -n python
 kubectl get nodes -n python
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME                 STATUS   ROLES           AGE   VERSION
    kind-control-plane   Ready    control-plane   26h   v1.34.0
 ```
+
+</details>
 
 * Got python-app service on port 5000
 
@@ -1367,10 +1546,14 @@ kubectl get nodes -n python
 kubectl get services -n python
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
    python-app   ClusterIP   10.96.86.124   <none>        5000/TCP   10m
 ```
+
+</details>
 
 * Got deployment READY 1/1 & Available
 
@@ -1378,11 +1561,14 @@ kubectl get services -n python
 kubectl get deployment -n python
 ```
 
-```bash result
+<details> <summary>results</summary>
 
+```bash result
    NAME         READY   UP-TO-DATE   AVAILABLE   AGE
    python-app   1/1     1            1           8m18s
 ```
+
+</details>
 
 * Got all : ingress,pods,nodes,services,deploments and secrets at once
 
@@ -1397,9 +1583,13 @@ cd ~/charts/python-app
 helm uninstall python-app -n python
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    release "python-app" uninstalled
 ```
+
+</details>
 
 * Verify, it is gone, pod terminated
 
@@ -1423,10 +1613,14 @@ kubectl get ing,po,no,svc,deployment,secrets -n python
 kubectl get no --context kind-kind
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME                      STATUS   ROLES           AGE    VERSION
    node/kind-control-plane   Ready    control-plane   2d8h   v1.34.0  
 ```
+
+</details>
 
 ## ArgoCD
 
@@ -1441,18 +1635,26 @@ kubectl get no --context kind-kind
 helm repo add argo https://argoproj.github.io/argo-helm
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    "argo" has been added to your repositories
 ```
+
+</details>
 
 ```bash
 helm repo ls
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME    URL
    argo    https://argoproj.github.io/argo-helm
 ```
+
+</details>
 
 #### Create ArgoCD Heml Chart
 
@@ -1566,10 +1768,14 @@ kubectl get pods -n argocd
 kubectl get ing -n argocd
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
    NAME            CLASS   HOSTS             ADDRESS     PORTS     AGE
    argocd-server   nginx   argocd.test.com   localhost   80, 443   3h22m
 ```
+
+</details>
 
 * Look ingress, podsn nodesn services and deploments for argocd namespace :
 
@@ -1662,4 +1868,9 @@ git push origin
 
 ```
 
-#### 
+#### In ArgoCD add your repository
+
+* https
+* git
+* no login/password
+  
