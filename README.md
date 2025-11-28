@@ -1990,11 +1990,11 @@ jobs:
 
 ### Add CI secrets
 
-| secret names       | url  | image |
-|-----               |----- |----   |
-| DOCKERHUB_USERNAME |      |       |
-| DOCKERHUB_TOKEN    |  https://github.com/your-own-account/backstage/settings/secrets/actions | ![repository secrets](docs/images/repo_secrets_github.png) |
-
+| secret names       | url & image |
+|-----               |---------    |
+| DOCKERHUB_USERNAME | https://github.com/your-own-account/backstage/settings/secrets/actions  |
+| DOCKERHUB_TOKEN    | ![repository secrets](docs/images/repo_secrets_github.png) |
+| Dev Tokens | ![deve_settings_tokens](docs/images/dev_settings_tokens.png) |
 
 * we add CD sample 
 
