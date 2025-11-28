@@ -1854,11 +1854,15 @@ kubectl get ing,po,no,svc,deployment,secrets -n argocd
 ```bash
 kubectl cluster-info
 kubectl cluster-info --context kind-kind
-kubectl get ing,po, no,svc,deployments,secrets -n ingress-nginx
-kubectl get ing,po,no,svc,deployments,secrets -n python
-kubectl get ing,po,no,svc,deployments,secrets -n argocd
+kubectl get ing,po, no,svc,deploy,secrets,rs,ep,jobs -n ingress-nginx
+kubectl get ing,po,no,svc,deploy,secrets,rs,ep,jobs -n python
+kubectl get ing,po,no,svc,deploy,secrets,rs,ep,jobs -n argocd
 helm repo ls
 ```
+
+```bash
+
+
 
 #### Login ArgoCD
 
@@ -1867,7 +1871,11 @@ helm repo ls
 ```bash
 kubectl get secrets -n argocd
 kubectl get secrets -n argocd argocd-initial-admin-secret -o yaml
-echo "THEPASSWORD:)GIVENINT3LINE" | base64 -d
+echo "THEPASSWORD:)GIVENINLINE3" | base64 -d
+```
+
+```bash
+kubectl get secrets -n argocd argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
 ```
 
 * You can log as admin with echoed decoded password
@@ -1894,3 +1902,89 @@ git push origin
 | Argo repo  | ![repos](docs/images/argocd_repos.png)| ![add repo](docs/images/add-argocd-http-repo.png) | ![disconnect](docs/images/disconnect-repo.png)  |
 | Argo appli | ![applis](docs/images/argocd_applis.png) | ![create appli](docs/images/create-application.png) | ![delete](docs/images/delete-application.png) |
 | CI/CD Action Setting | ![CI/CD Action Settings](docs/images/cicd_action_setting.png) |  |  |
+
+https://github.com/docker/build-push-action
+
+* we take an example of build-push for ci
+
+```yaml
+
+name: ci
+
+on:
+  push:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: user/app:latest
+```
+
+* we create .github/workflows/cicd.yaml (all yaml of this folder will be executed)
+
+* we rename cicd as we group both CI and CD (educ)
+* we set the path and branch for **on** contraint CI action : our src folder and main branch - like this only the python code will imply CI/CD (educ) (TO_XTD java ~spring, php ~laravel|symfony, rust ~?, es6 ~nodeJs or newer javascript server framework - extend with BD and ORM + reparated fronts in React, + LLM, Angular and Vue -> POC 0Day)
+* we keep ubuntu (educ) (TO_XTD try with alpine or lighter os, or coco os containers...)
+* we add shorten commit id sample (educ)
+* we keep login in docker hub (we have to provid/configure login & pass)
+* we remove QEMU and Buildx (educ) (TO_XTD proxmox, vmare, qemu, buildx, coco are very interesting - vagrant & packer ?)
+* change the tags with our git hub image (docker image ls --no-trunc, take repository name)
+* add outputs with the commit_id
+
+```yaml
+
+on:
+  push:
+    paths:
+      - src/**
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Shorten commit id
+        shell: bash
+        run: |
+          echo "COMMIT_ID=${GITHUB_SHA::6}" >> "$GITHUB_ENV"
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: luspokvenus/python-app:${{ env.COMMIT_ID }}
+    outputs:
+      commit_id: ${{ env.COMMIT_ID }}
+```
+
+* we add CD sample 
+
+
+
+see 
