@@ -1996,7 +1996,12 @@ jobs:
 | DOCKERHUB_TOKEN    | ![repository secrets](docs/images/repo_secrets_github.png) |
 | Dev Tokens | ![deve_settings_tokens](docs/images/dev_settings_tokens.png) |
 
-* We add a token with basic + workflow permissions
+* We add a classic token with basic repo + workflow permissions on github developper settings
+* We update out .git/config with the token
+
+```yaml
+url = https://your-own-account:the_long_token_given_at_creationQ@github.com/your-own-account/backstage.git
+```
 
 * we add CD sample 
 
