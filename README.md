@@ -1903,6 +1903,11 @@ git push origin
 | Argo appli | ![applis](docs/images/argocd_applis.png) | ![create appli](docs/images/create-application.png) | ![delete](docs/images/delete-application.png) |
 | CI/CD Action Setting | ![CI/CD Action Settings](docs/images/cicd_action_setting.png) |  |  |
 
+
+## CI in github
+
+### CI script
+
 https://github.com/docker/build-push-action
 
 * we take an example of build-push for ci
@@ -1983,8 +1988,14 @@ jobs:
       commit_id: ${{ env.COMMIT_ID }}
 ```
 
+### Add CI secrets
+
+| secret names       | url  | image |
+|-----               |----- |----   |
+| DOCKERHUB_USERNAME |      |       |
+| DOCKERHUB_TOKEN    |  https://github.com/your-own-account/backstage/settings/secrets/actions | 
+![repository secrets](docs/images/repo_secrets_github.png.png) |
+
+
 * we add CD sample 
 
-
-
-see 
