@@ -1993,8 +1993,7 @@ jobs:
 | secret names       | url  | image |
 |-----               |----- |----   |
 | DOCKERHUB_USERNAME |      |       |
-| DOCKERHUB_TOKEN    |  https://github.com/your-own-account/backstage/settings/secrets/actions | 
-![repository secrets](docs/images/repo_secrets_github.png) |
+| DOCKERHUB_TOKEN    |  https://github.com/your-own-account/backstage/settings/secrets/actions | ![repository secrets](docs/images/repo_secrets_github.png) |
 
 
 * we add CD sample 
