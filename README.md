@@ -1996,5 +1996,7 @@ jobs:
 | DOCKERHUB_TOKEN    | ![repository secrets](docs/images/repo_secrets_github.png) |
 | Dev Tokens | ![deve_settings_tokens](docs/images/dev_settings_tokens.png) |
 
+* We add a token with basic + workflow permissions
+
 * we add CD sample 
 
