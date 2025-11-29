@@ -5,7 +5,20 @@ on:
     paths:
       - src/**
     branches:
+      - 'poc/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
+      - 'feature/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
+      - 'hardening/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
+      - 'fix/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
+      - 'hotfix/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
+      - 'refacto/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
+      - 'releases/[0-9][0-9].[0-9][0-9].[0.9][0.9]'
+      - 'hardening/[0-9][0-9].[0-9][0-9].[0.9][0.9]'
+      - develop
       - main
+      - 'v[0-9][0-9].[0-9][0-9].[0.9][0.9]'
+      - '!releases/**-alpha'
+      - !*wip
+      - !*WIP
 
 jobs:
   ci:
