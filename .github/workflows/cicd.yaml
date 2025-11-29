@@ -11,8 +11,8 @@ on:
       - 'fix/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
       - 'hotfix/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
       - 'refactos/[A-Z]+-[A-Z]+-[A-Z]+-[a-z]?'
-      - 'releases/[0-9]+.[0-9]+.[0-9]+-[A-Za-z0-9]+'
-      - 'hardenings/[0-9]+.[0-9]+.[0-9]+-[A-Za-z0-9]+'
+      - 'releases/[0-9]+.[0-9]+.[0-9]+-[a-z]+'
+      - 'hardenings/[0-9]+.[0-9]+.[0-9]+-[a-z]+'
       - develop
       - main
       - 'v[0-9]+.[0-9]+.[0-9]+-[A-Za-z0-9]+'
