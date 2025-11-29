@@ -24,6 +24,8 @@ def info():
     return jsonify({
     	'time': datetime.datetime.now().strftime("%I:%M:%S%p on %A %d %B, %Y"),
     	'hostname': socket.gethostname(),
+        'server name': socket.getservbyname(),
+        'server port': socket.getservbyport(),
         'message': 'You are doing great, little human! <3',
         'deployed_on': 'localhost 4 the moment'
     })
