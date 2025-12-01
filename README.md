@@ -43,6 +43,9 @@
 
 <details> <summary>Glossary details</summary>
 
+**ARC**
+: Actions Runner Controller is a Kubernetes operator that orchestrates and scales self-hosted runners for GitHub Actions.
+
 **ArgoCD**
 : Argo CD is a **declarative, GitOps continuous delivery tool for Kubernetes**.
 
@@ -97,8 +100,11 @@
 **Backstage Software Templates**
 : **Tool** that can help you **create Components** inside Backstage. By default, it has the ability to **load skeletons of code**, template in some **variables**, and then **publish** the template to some locations like GitHub or GitLab.
 
+**CDRs**
+: 
+
 **CD**
-: Continuous Delivery||Deployment, CD refers to the practice of continuous delivery and/or continuous deployment software. Both are about automating further stages of the pipeline.
+: **C**ontinuous **D**elivery||**D**eployment, CD refers to the practice of continuous delivery and/or continuous deployment software. Both are about automating further stages of the pipeline.
 
    > * **Continuous delivery** automates the release of validated code to a repository following the automation of builds and unit and integration testing in CI.
    > * **Continuous deployment** is an extension of continuous delivery, and can refer to automating the release of a developer’s changes from the repository to production, where it is usable by customers. It can concern development and testing envronnements.
@@ -106,7 +112,10 @@
    > * **CD features&fix DEV > CD integration QA > CD version-X.X.X PPD > CD PROD**
 
 **CI**
-: Continuous Integration, CI always refers to continuous integration, an automation process for developers that facilitates more frequent merging of code changes back to a shared branch, or “trunk.” As these updates are made, automated testing steps are triggered to ensure the reliability of merged code changes.
+: **C**ontinuous **I**ntegration, CI always refers to continuous integration, an automation process for developers that facilitates more frequent merging of code changes back to a shared branch, or “trunk.” As these updates are made, automated testing steps are triggered to ensure the reliability of merged code changes.
+
+**CRDs**
+: Custom Resource Definitions, CRDs are a powerful feature in Kubernetes that lets you extend its native API, enabling you to create your own resource types.
 
 **DevOps**
 : DevOps is a set of practices, tools, and a cultural philosophy that integrates and automates the work of software development (Dev) and IT operations (Ops) to improve and shorten the systems development life cycle. It emphasizes team empowerment, cross-team communication, collaboration, and technology automation.
@@ -549,8 +558,6 @@ kind --version
 * try kind :
   * create cluster
 
-
-
 ```bash
 kind create cluster
 ```
@@ -975,7 +982,7 @@ spec:
 
 </details>
 
-* into k8s/deploy.yam
+* move it into **k8s/deploy.yam**
 * change app name fron *nginx* to **python-app** for example
 * extend app name modification in spec selector and template
 * set replicas to 1 for the démo
@@ -1044,7 +1051,7 @@ spec:
 
 </details>
 
-* copy it inside k8s/service.yaml
+* move it inside **k8s/service.yaml**
 * change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
 * set the host "source" port (port forwarded exposed from we look on host) and the container target port (container port to reach)
 
@@ -1145,7 +1152,7 @@ spec:
 
 </details>
 
-* copy it inside k8s/ingress.yaml
+* move it inside **k8s/ingress.yaml**
 * change *my-service* *MyApp* by the name of our service **python-app** in deployment.yaml
 * check ingressClassName with kubectl get ingressclassname (not really necessary because we have just one - can remove this line) 
 * set the host "source" port (port forwarded exposed), check in service.yaml  targetPort
@@ -1682,7 +1689,7 @@ cd charts; mkdir argocd; cd argocd
 vim values-argo.yaml
 ```
 
-<details> <summary>values-argo.yaml</summary>
+<details> <summary>charts/argocd/values-argo.yaml</summary>
 
 ```yaml values-argo.yaml
 redis-ha:
@@ -1792,7 +1799,7 @@ kubectl get ing -n argocd
 
 </details>
 
-* Look ingress, podsn nodesn services and deploments for argocd namespace :
+* Look ingress, podsn nodesn services and deploments for argocd namespace [!NOTE] :
 
 ```bash
 kubectl get ing,po,no,svc,deployment,secrets -n argocd
@@ -1854,15 +1861,11 @@ kubectl get ing,po,no,svc,deployment,secrets -n argocd
 ```bash
 kubectl cluster-info
 kubectl cluster-info --context kind-kind
-kubectl get ing,po, no,svc,deploy,secrets,rs,ep,jobs -n ingress-nginx
+kubectl get ing,po,no,svc,deploy,secrets,rs,ep,jobs -n ingress-nginx
 kubectl get ing,po,no,svc,deploy,secrets,rs,ep,jobs -n python
 kubectl get ing,po,no,svc,deploy,secrets,rs,ep,jobs -n argocd
 helm repo ls
 ```
-
-```bash
-
-
 
 #### Login ArgoCD
 
@@ -1874,6 +1877,14 @@ kubectl get secrets -n argocd argocd-initial-admin-secret -o yaml
 echo "THEPASSWORD:)GIVENINLINE3" | base64 -d
 ```
 
+<details> <summary>results</summary>
+
+```bash result
+TODO
+```
+
+</details>
+
 ```bash
 kubectl get secrets -n argocd argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
 ```
@@ -1883,12 +1894,10 @@ kubectl get secrets -n argocd argocd-initial-admin-secret -o jsonpath='{.data.pa
 * Commit and push your project on github
 
 ```bash 
-
 git status
 git add charts
 git commit -a -m "argo with https"
 git push origin
-
 ```
 
 #### In ArgoCD add your repository
@@ -1912,8 +1921,9 @@ https://github.com/docker/build-push-action
 
 * we take an example of build-push for ci
 
-```yaml
+<details> <summary>.github/workflows/ci.yaml</summary>
 
+```yaml
 name: ci
 
 on:
@@ -1943,18 +1953,24 @@ jobs:
           tags: user/app:latest
 ```
 
+</details>
+
+
 * we create .github/workflows/cicd.yaml (all yaml of this folder will be executed)
 
 * we rename cicd as we group both CI and CD (educ)
-* we set the path and branch for **on** contraint CI action : our src folder and main branch - like this only the python code will imply CI/CD (educ) (TO_XTD java ~spring, php ~laravel|symfony, rust ~?, es6 ~nodeJs or newer javascript server framework - extend with BD and ORM + reparated fronts in React, + LLM, Angular and Vue -> POC 0Day)
-* we keep ubuntu (educ) (TO_XTD try with alpine or lighter os, or coco os containers...)
+* we set the path and branch for **on** contraint CI action : our src folder and main branch - like this only the python code will imply CI/CD (educ)  [!TIP] TO_XTD java ~spring, php ~laravel|symfony, rust ~?, es6 ~nodeJs or newer javascript server framework - extend with BD and ORM + reparated fronts in React, + LLM, Angular and Vue -> POC **0Day**
+* we keep ubuntu (educ)  [!TIP] TO_XTD try with alpine or lighter os, or coco os containers...
 * we add shorten commit id sample (educ)
 * we keep login in docker hub (we have to provid/configure login & pass)
-* we remove QEMU and Buildx (educ) (TO_XTD proxmox, vmare, qemu, buildx, coco are very interesting - vagrant & packer ?)
+* we remove QEMU and Buildx (educ) [!TIP] TO_XTD proxmox, vmare, qemu, buildx, coco are very interesting - vagrant & packer ?
 * change the tags with our git hub image (docker image ls --no-trunc, take repository name)
 * add outputs with the commit_id
 
+<details> <summary>.github/workflows/cicd.yaml</summary>
+
 ```yaml
+name: cicd
 
 on:
   push:
@@ -1988,6 +2004,8 @@ jobs:
       commit_id: ${{ env.COMMIT_ID }}
 ```
 
+</details>
+
 ### Add CI secrets
 
 | secret names       | url & image |
@@ -2003,5 +2021,302 @@ jobs:
 url = https://your-own-account:the_long_token_given_at_creationQ@github.com/your-own-account/backstage.git
 ```
 
-* we add CD sample 
+## we add CD 
 
+### Add k8s Runners
+
+#### prerequisites
+
+* we have github personnal access tokens for repo, admin:org and  admin:repo_hook
+* kubectl works
+* helm works
+* we have a local cluster (kind)
+* have a cert-manager in our cluster
+
+#### UnInstall a Cert-Manager
+
+* Ensure that all cert-manager resources that have been created by users have been deleted
+  
+```bash
+kubectl get Issuers,ClusterIssuers,Certificates,CertificateRequests,Orders,Challenges --all-namespaces
+```
+
+* uninstall using regular manifest (ex 1.8.2)
+  
+```bash
+kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+```
+
+* cowboy uninstall
+
+```bash
+for ns in ``kubectl get namespace -o jsonpath='{.items[*].metadata.name}'`; do
+   kubectl delete lease -n $ns cert-manager-cainjector-leader-election cert-manager-controller
+done
+```
+
+* uninstall using helm
+
+```bash 
+helm uninstall cert-manager -n cert-manager
+```
+
+<details> <summary>results</summary>
+
+```bash result
+These resources were kept due to the resource policy:
+[CustomResourceDefinition] certificaterequests.cert-manager.io
+[CustomResourceDefinition] certificates.cert-manager.io
+[CustomResourceDefinition] challenges.acme.cert-manager.io
+[CustomResourceDefinition] clusterissuers.cert-manager.io
+[CustomResourceDefinition] issuers.cert-manager.io
+[CustomResourceDefinition] orders.acme.cert-manager.io
+
+release "cert-manager" uninstalled
+```
+
+</details>
+
+#### Install a Cert-Manager in our local cluster
+
+[cert manager](https://cert-manager.io/docs/installation/)
+
+* Cert manager install with kubectl (ex 1.8.2)
+
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+```
+
+<details> <summary>results</summary>
+
+```bash result
+
+namespace/cert-manager created
+customresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io created
+serviceaccount/cert-manager-cainjector created
+serviceaccount/cert-manager created
+serviceaccount/cert-manager-webhook created
+configmap/cert-manager-webhook created
+clusterrole.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrole.rbac.authorization.k8s.io/cert-manager-view created
+clusterrole.rbac.authorization.k8s.io/cert-manager-edit created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests created
+clusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+role.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+rolebinding.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+service/cert-manager created
+service/cert-manager-webhook created
+deployment.apps/cert-manager-cainjector created
+deployment.apps/cert-manager created
+deployment.apps/cert-manager-webhook created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+validatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+```
+
+</details>
+
+* check pods are ready
+
+  * *long resource names*
+
+```bash
+kubectl get nodes,pods,services,deployments -n cert-manager
+```
+
+  * *short resource names*
+
+```bash
+kubectl get no,deploy,svc,po -n cert-manager
+```
+
+<details> <summary>results</summary>
+
+* not ready
+
+```bash result
+NAME                      STATUS   ROLES           AGE   VERSION
+node/kind-control-plane   Ready    control-plane   10d   v1.34.0
+
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/cert-manager              0/1     1            0           9m41s
+deployment.apps/cert-manager-cainjector   0/1     1            0           9m41s
+deployment.apps/cert-manager-webhook      0/1     1            0           9m41s
+
+NAME                           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/cert-manager           ClusterIP   10.96.21.113   <none>        9402/TCP   9m42s
+service/cert-manager-webhook   ClusterIP   10.96.197.96   <none>        443/TCP    9m41s
+
+NAME                                           READY   STATUS              RESTARTS   AGE
+pod/cert-manager-77fb4684d6-78bxg              0/1     ImagePullBackOff    0          9m41s
+pod/cert-manager-cainjector-69cdcd8845-2hb74   0/1     ContainerCreating   0          9m41s
+pod/cert-manager-webhook-55499ffd6b-k5lt4      0/1     ContainerCreating   0          9m41s
+
+```
+
+* ok
+
+```bash result ok
+
+NAME                      STATUS   ROLES           AGE   VERSION
+node/kind-control-plane   Ready    control-plane   10d   v1.34.0
+
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/cert-manager              1/1     1            1           50m
+deployment.apps/cert-manager-cainjector   1/1     1            1           50m
+deployment.apps/cert-manager-webhook      1/1     1            1           50m
+
+NAME                           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/cert-manager           ClusterIP   10.96.21.113   <none>        9402/TCP   50m
+service/cert-manager-webhook   ClusterIP   10.96.197.96   <none>        443/TCP    50m
+
+NAME                                           READY   STATUS    RESTARTS   AGE
+pod/cert-manager-77fb4684d6-78bxg              1/1     Running   0          50m
+pod/cert-manager-cainjector-69cdcd8845-2hb74   1/1     Running   0          50m
+pod/cert-manager-webhook-55499ffd6b-k5lt4      1/1     Running   0          50m
+
+```
+
+</details>
+
+* Check with [cmctl](https://cert-manager.io/docs/reference/cmctl/#installation)
+
+```bash
+cmctl check api
+```
+
+* Cert-manager installation using helm
+  
+  * **doc** : [cert-manager install with helm](https://cert-manager.io/docs/installation/helm/#installing-with-helm)
+
+  * [!IMPORTANT] cert-manager manages **non-namespaced resources** in your cluster.
+  * [!IMPORTANT] check signatures
+
+```bash
+curl -LO https://cert-manager.io/public-keys/cert-manager-keyring-2021-09-20-1020CF3C033D4F35BAE1C19E1226061C665DF13E.gpg
+
+helm install \
+  cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --version v1.19.1 \
+  --namespace cert-manager \
+  --create-namespace \
+  --verify \
+  --keyring ./cert-manager-keyring-2021-09-20-1020CF3C033D4F35BAE1C19E1226061C665DF13E.gpg \
+  --set crds.enabled=true
+```
+
+#### Custom Resource Definitions (CRDs)
+
+* add CRDs
+
+```bash
+kubectl apply -f https://github.com/actions-runner-controller/actions-runner-controller/releases/latest/download/actions.runner-controller.crds.yaml
+```
+
+<details> <summary>results</summary>
+
+```bash result
+TODO
+```
+
+</details>
+
+#### Actions Runner Controller (ARC)
+
+* add ARC repository
+
+```bash
+helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+helm repo update
+```
+
+<details> <summary>results</summary>
+
+```bash result
+TODO
+```
+
+</details>
+
+* helm install of ARC
+
+```bash
+helm install controller \
+--namespace actions-runner-system \
+--create-namespace \
+--set=controller-manager.webhookPort=9443 \
+actions-runner-controller/actions-runner-controller
+```
+
+<details> <summary>results</summary>
+
+```bash result
+TODO
+```
+
+</details>
+
+#### Deploy runners
+
+* create ARC configuration files arc.yaml
+
+<details> <summary>arc.yaml</summary>
+
+```yaml
+apiVersion: actions.github.com/v1alpha1
+kind: RunnerDeployment
+metadata:
+ name: example-runnerdeploy
+spec:
+ replicas: 2
+ template:
+   spec:
+     repository: "your-github-org/your-repo"
+```
+
+</details>
+
+* apply the ARC configuration in our local cluster
+
+```bash
+kubectl apply -f arc.yaml
+```
+
+<details> <summary>results</summary>
+
+```bash result
+TODO
+```
+
+</details>
+
+* check ARC installation
+
+```bash
+kubectl get pods -n actions-runner-system
+```
