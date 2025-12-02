@@ -1,7 +1,10 @@
 
 # Learn Platform Engineering, Backstage, Kubernetes, ArgoCD, Docker, GitOps, Helm, GitHub Actions & CI/CD to build IDPs
 
-*To get a personalized course, create or/and get your ids of dockerhub and github; create a branch with my_course__%your_login_in_dockerhub%__%your_login_in_github%, wait for your branch pipeline, your personalized course is in the artifacts.*
+*To get a personalized course, create or/and get your ids of dockerhub and github; create a branch with my_course__%YourDockerHubLogin%__%your_login_in_github%.
+Replace your-own-github-account with your account name on github.
+Replace YourDockerHubLogin with your account in dockerhub.
+wait for your branch pipeline.*
 
 ## Glossary
 
@@ -99,9 +102,6 @@
 
 **Backstage Software Templates**
 : **Tool** that can help you **create Components** inside Backstage. By default, it has the ability to **load skeletons of code**, template in some **variables**, and then **publish** the template to some locations like GitHub or GitLab.
-
-**CDRs**
-: 
 
 **CD**
 : **C**ontinuous **D**elivery||**D**eployment, CD refers to the practice of continuous delivery and/or continuous deployment software. Both are about automating further stages of the pipeline.
@@ -255,7 +255,7 @@ Join now and get ahead in the future of DevOps & Platform Engineering!
 * docker is working
 * pyhon3 and pip are working
 * a linux ubuntu, on wsl2, docker somewhere, wmare... or on bare-metal
-* we have your own account on github (*your-own-account*)
+* we have your own account on github (*your-own-github-account*)
 * an editor, like vs code or vim (*examples are given with vim to make it old seems old school*)
 
 ### Steps
@@ -284,7 +284,7 @@ git clone https://github.com/ricardoandre97/python-app.git .
 cd python-app
 git remote -v
 git remote remove origin
-git remote add origin https://github.com/your-own-account/backstage.git
+git remote add origin https://github.com/your-own-github-account/backstage.git
 ```
 
 ### writing Application Dockerfile in ${PROJ}/Dockerfile
@@ -458,16 +458,16 @@ cd ~/src/backstage/pyhton-app/
 
 * Create a repo (see DCA images) in Docker Hub
 
-* **tag** the image with your Docker Hub login ${TheLogin}
+* **tag** the image with your Docker Hub login ${YourDockerHubLogin}
   
 ```bash
-docker tag pyhton-app:v2 ${TheLogin}/pyhton-app:v2
+docker tag pyhton-app:v2 ${YourDockerHubLogin}/pyhton-app:v2
 ```
 
 * Get logged in your Docker Hub account
 
 ```bash
-docker login -u ${TheLogin}
+docker login -u ${YourDockerHubLogin}
 ```
 
 <details> <summary>results</summary>
@@ -484,9 +484,9 @@ docker login -u ${TheLogin}
 * Push amd64 image
 
 ```bash
-docker push ${TheLogin}/pyhton-app:v2
-docker build --platform linux/amd64 -t ${TheLogin}/getting-started .
-docker push ${TheLogin}/pyhton-app
+docker push ${YourDockerHubLogin}/pyhton-app:v2
+docker build --platform linux/amd64 -t ${YourDockerHubLogin}/python-app .
+docker push ${YourDockerHubLogin}/pyhton-app
 docker images
 ```
 
@@ -987,7 +987,7 @@ spec:
 * extend app name modification in spec selector and template
 * set replicas to 1 for the démo
 * change container name as well
-* use our image from our dockerhub account (luspokvenus/python-app v2)
+* use our image from our dockerhub account (${YourDockerHubLogin}/pyhton-app v2)
 
 ```bash
 vim k8s/deploy.yaml
@@ -1275,7 +1275,7 @@ kubectl delete -f deploy.yaml
 * we are looged in docker hub
 
 ```bash 
-docker login -u luspokvenus
+docker login -u ${YourDockerHubLogin}
 ```
 
 * k8s resources set applied with files are deleted
@@ -2010,7 +2010,7 @@ jobs:
 
 | secret names       | url & image |
 |-----               |---------    |
-| DOCKERHUB_USERNAME | https://github.com/your-own-account/backstage/settings/secrets/actions  |
+| DOCKERHUB_USERNAME | https://github.com/your-own-github-account/backstage/settings/secrets/actions  |
 | DOCKERHUB_TOKEN    | ![repository secrets](docs/images/repo_secrets_github.png) |
 | Dev Tokens | ![deve_settings_tokens](docs/images/dev_settings_tokens.png) |
 
@@ -2018,7 +2018,7 @@ jobs:
 * We update out .git/config with the token
 
 ```yaml
-url = https://your-own-account:the_long_token_given_at_creationQ@github.com/your-own-account/backstage.git
+url = https://your-own-github-account:the_long_token_given_at_creationQ@github.com/your-own-github-account/backstage.git
 ```
 
 ## we add CD 
@@ -2232,7 +2232,7 @@ helm install \
 
 #### Custom Resource Definitions (CRDs)
 
-* add CRDs
+* add CRDs with 
 
 ```bash
 kubectl apply -f https://github.com/actions-runner-controller/actions-runner-controller/releases/latest/download/actions.runner-controller.crds.yaml
@@ -2248,17 +2248,33 @@ TODO
 
 #### Actions Runner Controller (ARC)
 
+* doc [quick start ARC](https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md)
+
 * add ARC repository
 
 ```bash
 helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+```
+
+<details> <summary>results</summary>
+
+```bash result
+"actions-runner-controller" has been added to your repositories
+```
+
+</details>
+
+```bash
 helm repo update
 ```
 
 <details> <summary>results</summary>
 
 ```bash result
-TODO
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "actions-runner-controller" chart repository
+...Successfully got an update from the "argo" chart repository
+Update Complete. ⎈Happy Helming!⎈
 ```
 
 </details>
@@ -2266,37 +2282,74 @@ TODO
 * helm install of ARC
 
 ```bash
-helm install controller \
---namespace actions-runner-system \
---create-namespace \
---set=controller-manager.webhookPort=9443 \
-actions-runner-controller/actions-runner-controller
+helm upgrade --install --namespace actions-runner-system --create-namespace\
+  --set=authSecret.create=true\
+  --set=authSecret.github_token="REPLACE_YOUR_TOKEN_HERE"\
+  --wait actions-runner-controller actions-runner-controller/actions-runner-controller
 ```
 
 <details> <summary>results</summary>
 
 ```bash result
-TODO
+NAME: actions-runner-controller
+LAST DEPLOYED: Tue Dec  2 11:17:09 2025
+NAMESPACE: actions-runner-system
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace actions-runner-system -l "app.kubernetes.io/name=actions-runner-controller,app.kubernetes.io/instance=actions-runner-controller" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace actions-runner-system $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace actions-runner-system port-forward $POD_NAME 8080:$CONTAINER_PORT
 ```
 
 </details>
+
+```bash
+export POD_NAME=$(kubectl get pods --namespace actions-runner-system -l "app.kubernetes.io/name=actions-runner-controller,app.kubernetes.io/instance=actions-runner-controller" -o jsonpath="{.items[0].metadata.name}")
+export CONTAINER_PORT=$(kubectl get pod --namespace actions-runner-system $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+
+echo "pod name $POD_NAME, container port $CONTAINER_PORT"
+kubectl --namespace actions-runner-system port-forward $POD_NAME 8080:$CONTAINER_PORT
+```
+
+* check http://127.0.0.1:8080 in host browser
+> Client sent an HTTP request to an HTTPS server.
+
+* verification our ARC is running
+ 
+```bash
+ kubectl get pods -n actions-runner-system
+```
+
+<details> <summary>results</summary>
+
+```bash result
+NAME                                        READY   STATUS    RESTARTS   AGE
+actions-runner-controller-5577b667d-9x8rh   2/2     Running   0          11m
+```
+
+</details>
+
 
 #### Deploy runners
 
 * create ARC configuration files arc.yaml
 
-<details> <summary>arc.yaml</summary>
+<details> <summary>arc/runnerdeployment.yaml</summary>
 
 ```yaml
 apiVersion: actions.github.com/v1alpha1
 kind: RunnerDeployment
 metadata:
- name: example-runnerdeploy
+ name: self-hosted-runners
 spec:
- replicas: 2
+ replicas: 1
  template:
    spec:
-     repository: "your-github-org/your-repo"
+     repository: "${YourDockerHubLogin}/pyhton-app"
 ```
 
 </details>
@@ -2304,8 +2357,25 @@ spec:
 * apply the ARC configuration in our local cluster
 
 ```bash
-kubectl apply -f arc.yaml
+kubectl apply -n actions-runner-system -f arc/runnerdeployment.yaml
 ```
+
+* in a single command : 
+
+```bash
+cat << EOF | kubectl apply -n actions-runner-system -f -
+apiVersion: actions.github.com/v1alpha1
+kind: RunnerDeployment
+metadata:
+ name: self-hosted
+spec:
+ replicas: 1
+ template:
+   spec:
+     repository: "${YourDockerHubLogin}/pyhton-app"
+EOF
+```
+
 
 <details> <summary>results</summary>
 
