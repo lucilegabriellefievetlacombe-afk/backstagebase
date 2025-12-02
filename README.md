@@ -2380,7 +2380,8 @@ kubectl get pods -n actions-runner-system
 
 ```bash result
 NAME                                        READY   STATUS    RESTARTS   AGE
-actions-runner-controller-5577b667d-2t2bn   2/2     Running   0          30m
+actions-runner-controller-5577b667d-2t2bn   2/2     Running   0          128m
+self-hosted-24dkv-7cxxv                     2/2     Running   0          2m49s
 ```
 
 </details>
@@ -2392,8 +2393,8 @@ kubectl get runners
 <details> <summary>results</summary>
 
 ```bash result
-NAME                               ENTERPRISE   ORGANIZATION   REPOSITORY               GROUP   LABELS   STATUS   MESSAGE   WF REPO   WF RUN   AGE
-self-hosted-runners-qwllm-6sphx                                luspokvenus/python-app
+NAME                              ENTERPRISE   ORGANIZATION   REPOSITORY                                       GROUP   LABELS   STATUS    MESSAGE   WF REPO   WF RUN   AGE
+self-hosted-24dkv-7cxxv                                       lucilegabriellefievetlacombe-afk/backstagebase                    Running                                2m55s
 ```
 
 
