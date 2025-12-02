@@ -1880,7 +1880,21 @@ echo "THEPASSWORD:)GIVENINLINE3" | base64 -d
 <details> <summary>results</summary>
 
 ```bash result
-TODO
+piVersion: v1
+data:
+  password: WUNtM0FDbjdobjQ5Ny1law==
+kind: Secret
+metadata:
+  creationTimestamp: "2025-11-23T11:50:55Z"
+  name: argocd-initial-admin-secret
+  namespace: argocd
+  resourceVersion: "84508"
+  uid: e78c1f86-e3b9-499a-b78d-fa07b0db0046
+type: Opaque
+```
+
+```bash
+Lq$�9base64invalid-ek
 ```
 
 </details>
@@ -2400,6 +2414,42 @@ self-hosted-24dkv-7cxxv                                       lucilegabriellefie
 |url| settings > Actions > Runners |
 |---|--- |
 |https://github.com/${your_login_in_github}/pyhton-app/settings/actions/runners|![self hosted, default vs helm](docs/images/self-hosted-runner.png)|
+
+## Use CD with our Argo CD
+
+* doc [Argo CD Cli installation ](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
+
+```bash
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+rm argocd-linux-amd64
+```
+
+* log in our https://argocd.test.com
+* clean old project
+* add our projet
+* we see it is deploying the previous version
+* let's try to connect/login (insecurely for the moment) with the cli
+
+```bash
+argocd login argocd.test.com --insecure --grpc-web --username admin  --password `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+```
+
+```bash result
+'admin:login' logged in successfully
+Context 'argocd.test.com' updated
+```
+
+* check the applications we have in argo CD
+
+```
+argocd app list
+```
+
+```bash result
+NAME               CLUSTER                         NAMESPACE  PROJECT  STATUS  HEALTH       SYNCPOLICY  CONDITIONS  REPO                                                                   PATH               TARGET
+argocd/pyhton-app  https://kubernetes.default.svc  python     default  Synced  Progressing  Manual      <none>      https://github.com/lucilegabriellefievetlacombe-afk/backstagebase.git  charts/python-app  main
+```
 
 
 ---
