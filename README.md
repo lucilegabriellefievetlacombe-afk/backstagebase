@@ -2358,7 +2358,7 @@ spec:
  replicas: 1
  template:
    spec:
-     repository: "${YourDockerHubLogin}/pyhton-app"
+     repository: "${your_login_in_github}/pyhton-app"
 EOF
 ```
 
