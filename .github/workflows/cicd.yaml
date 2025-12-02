@@ -15,7 +15,7 @@ on:
       - 'hardenings/[0-9]+.[0-9]+.[0-9]+'
       - develop
       - main
-      - my_course__[A-Za-z0-9_-]*__[A-Za-z0-9_-]*
+      - my_course_**
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - '!releases/**-alpha'
       - '!**wip'
