@@ -44,8 +44,10 @@ def details():
 @app.route('/api/json/v1/details')
 def json_details():
     """say hello in json"""
-    if datetime.datetime.now().hour > 17:
+    if datetime.datetime.now().hour > 19:
             return jsonify({ 'msg' : 'hello world, good night' })
+        elif datetime.datetime.now().hour > 16:
+            return jsonify({ 'msg' : 'hello world, good evening' })
     elif datetime.datetime.now().hour > 12:
             return jsonify({ 'msg' : 'hello world, good afternoon' })
     else:
