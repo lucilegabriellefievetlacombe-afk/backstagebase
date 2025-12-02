@@ -32,12 +32,24 @@ def info():
 @app.route('/api/html/v1/details')
 def details():    
     """say hello in html"""
-    return '<h1>hello world</h1>'
+    if datetime.datetime.now().hour > 19:
+           return '<h1>hello world, good night</1>'
+    elif datetime.datetime.now().hour > 16:
+           return '<h1>hello world, good evening</1>'
+    elif datetime.datetime.now().hour > 12:
+           return '<h1>hello world, good afternoon</1>'
+    else:
+           return '<h1>hello world, good morning</1>'
 
 @app.route('/api/json/v1/details')
 def json_details():
     """say hello in json"""
-    return jsonify({ 'msg' : 'hello world' })
+    if datetime.datetime.now().hour > 17:
+            return jsonify({ 'msg' : 'hello world, good night' })
+    elif datetime.datetime.now().hour > 12:
+            return jsonify({ 'msg' : 'hello world, good afternoon' })
+    else:
+            return jsonify({ 'msg' : 'hello world, good morning' })
 
 @app.route('/api/json/v1/healthz')
 def health():

@@ -2397,6 +2397,9 @@ NAME                              ENTERPRISE   ORGANIZATION   REPOSITORY        
 self-hosted-24dkv-7cxxv                                       lucilegabriellefievetlacombe-afk/backstagebase                    Running                                2m55s
 ```
 
+|url| settings > Actions > Runners |
+|---|--- |
+|https://github.com/${your_login_in_github}/pyhton-app/settings/actions/runners|![self hosted, default vs helm](docs/images/self-hosted-runner.png)|
 
 
 ---
