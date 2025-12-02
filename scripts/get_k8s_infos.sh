@@ -16,7 +16,7 @@ do
     res=`kubectl get $rt -n $ns 2> /dev/null`
     if [ "$res" != "" ]; then
     	echo -e "\n$rt in $ns namespace (kubectl get $rt -n $ns)"
-	echo -e "$res\n"
+	    echo -e "$res\n"
     fi
   done
   
@@ -28,8 +28,9 @@ do
     		pass=`kubectl get secrets -n $ns $sec -o jsonpath='{.data.password}' | base64 -d 2> /dev/null`
     		if [ "$pass" != "" ]; then
     			echo -e "\nSecret $sec in $ns namespace (kubectl get secrets -n $ns $sec -o jsonpath='{.data.password}' | base64 -d)"
-			echo $pass
+			    echo $pass
     		fi
   	done
   fi
+  
 done

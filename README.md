@@ -2230,22 +2230,6 @@ helm install \
   --set crds.enabled=true
 ```
 
-#### Custom Resource Definitions (CRDs)
-
-* add CRDs with 
-
-```bash
-kubectl apply -f https://github.com/actions-runner-controller/actions-runner-controller/releases/latest/download/actions.runner-controller.crds.yaml
-```
-
-<details> <summary>results</summary>
-
-```bash result
-TODO
-```
-
-</details>
-
 #### Actions Runner Controller (ARC)
 
 * doc [quick start ARC](https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md)
@@ -2341,7 +2325,7 @@ actions-runner-controller-5577b667d-9x8rh   2/2     Running   0          11m
 <details> <summary>arc/runnerdeployment.yaml</summary>
 
 ```yaml
-apiVersion: actions.github.com/v1alpha1
+apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
  name: self-hosted-runners
@@ -2351,6 +2335,8 @@ spec:
    spec:
      repository: "${YourDockerHubLogin}/pyhton-app"
 ```
+
+*change ${YourDockerHubLogin} by your dockerhub account name*
 
 </details>
 
@@ -2364,7 +2350,7 @@ kubectl apply -n actions-runner-system -f arc/runnerdeployment.yaml
 
 ```bash
 cat << EOF | kubectl apply -n actions-runner-system -f -
-apiVersion: actions.github.com/v1alpha1
+apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
  name: self-hosted
@@ -2376,11 +2362,10 @@ spec:
 EOF
 ```
 
-
 <details> <summary>results</summary>
 
 ```bash result
-TODO
+runnerdeployment.actions.summerwind.dev/self-hosted-runners created
 ```
 
 </details>
@@ -2390,3 +2375,43 @@ TODO
 ```bash
 kubectl get pods -n actions-runner-system
 ```
+
+<details> <summary>results</summary>
+
+```bash result
+NAME                                        READY   STATUS    RESTARTS   AGE
+actions-runner-controller-5577b667d-2t2bn   2/2     Running   0          30m
+```
+
+</details>
+
+```bash
+kubectl get runners
+```
+
+<details> <summary>results</summary>
+
+```bash result
+NAME                               ENTERPRISE   ORGANIZATION   REPOSITORY               GROUP   LABELS   STATUS   MESSAGE   WF REPO   WF RUN   AGE
+self-hosted-runners-qwllm-6sphx                                luspokvenus/python-app
+```
+
+
+
+---
+
+#### Custom Resource Definitions (CRDs)
+
+* add CRDs with 
+
+```bash
+
+```
+
+<details> <summary>results</summary>
+
+```bash result
+TODO
+```
+
+</details>
