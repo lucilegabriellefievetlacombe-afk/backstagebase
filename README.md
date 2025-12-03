@@ -284,7 +284,7 @@ git clone https://github.com/ricardoandre97/python-app.git .
 cd python-app
 git remote -v
 git remote remove origin
-git remote add origin https://github.com/your-own-github-account/backstage.git
+git remote add origin https://github.com/your-own-github-account/pyhon-app.git
 ```
 
 ### writing Application Dockerfile in ${PROJ}/Dockerfile
@@ -1421,17 +1421,17 @@ charts/python-app-wsl2/$ ls -al templates
 
 ```bash result
    total 24
-   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 .
-   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:17 ..
-   -rwxrwxrwx 1 lucile lucile 2850 Nov 19 15:11 NOTES.txt
-   -rwxrwxrwx 1 lucile lucile 1862 Nov 19 15:11 _helpers.tpl
-   -rwxrwxrwx 1 lucile lucile 2420 Nov 19 15:11 deployment.yaml
-   -rwxrwxrwx 1 lucile lucile 1015 Nov 19 15:11 hpa.yaml
-   -rwxrwxrwx 1 lucile lucile  969 Nov 19 15:11 httproute.yaml
-   -rwxrwxrwx 1 lucile lucile 1112 Nov 19 15:11 ingress.yaml
-   -rwxrwxrwx 1 lucile lucile  385 Nov 19 15:11 service.yaml
-   -rwxrwxrwx 1 lucile lucile  405 Nov 19 15:11 serviceaccount.yaml
-   drwxrwxrwx 1 lucile lucile  512 Nov 19 15:11 tests
+   drwxrwxrwx 1 luspokvenus luspokvenus  512 Nov 19 15:11 .
+   drwxrwxrwx 1 luspokvenus luspokvenus  512 Nov 19 15:17 ..
+   -rwxrwxrwx 1 luspokvenus luspokvenus 2850 Nov 19 15:11 NOTES.txt
+   -rwxrwxrwx 1 luspokvenus luspokvenus 1862 Nov 19 15:11 _helpers.tpl
+   -rwxrwxrwx 1 luspokvenus luspokvenus 2420 Nov 19 15:11 deployment.yaml
+   -rwxrwxrwx 1 luspokvenus luspokvenus 1015 Nov 19 15:11 hpa.yaml
+   -rwxrwxrwx 1 luspokvenus luspokvenus  969 Nov 19 15:11 httproute.yaml
+   -rwxrwxrwx 1 luspokvenus luspokvenus 1112 Nov 19 15:11 ingress.yaml
+   -rwxrwxrwx 1 luspokvenus luspokvenus  385 Nov 19 15:11 service.yaml
+   -rwxrwxrwx 1 luspokvenus luspokvenus  405 Nov 19 15:11 serviceaccount.yaml
+   drwxrwxrwx 1 luspokvenus luspokvenus  512 Nov 19 15:11 tests
 ```
 
 </details>
@@ -2024,7 +2024,7 @@ jobs:
 
 | secret names       | url & image |
 |-----               |---------    |
-| DOCKERHUB_USERNAME | https://github.com/your-own-github-account/backstage/settings/secrets/actions  |
+| DOCKERHUB_USERNAME | https://github.com/your-own-github-account/pyhon-app/settings/secrets/actions  |
 | DOCKERHUB_TOKEN    | ![repository secrets](docs/images/repo_secrets_github.png) |
 | Dev Tokens | ![deve_settings_tokens](docs/images/dev_settings_tokens.png) |
 
@@ -2032,7 +2032,7 @@ jobs:
 * We update out .git/config with the token
 
 ```yaml
-url = https://your-own-github-account:the_long_token_given_at_creationQ@github.com/your-own-github-account/backstage.git
+url = https://your-own-github-account:the_long_token_given_at_creationQ@github.com/your-own-github-account/pyhon-app.git
 ```
 
 ## we add CD 
@@ -2408,7 +2408,7 @@ kubectl get runners
 
 ```bash result
 NAME                              ENTERPRISE   ORGANIZATION   REPOSITORY                                       GROUP   LABELS   STATUS    MESSAGE   WF REPO   WF RUN   AGE
-self-hosted-24dkv-7cxxv                                       lucilegabriellefievetlacombe-afk/backstagebase                    Running                                2m55s
+self-hosted-24dkv-7cxxv                                       ${your_login_in_github}/pyhton-app                    Running                                2m55s
 ```
 
 |url| settings > Actions > Runners |
@@ -2428,6 +2428,16 @@ rm argocd-linux-amd64
 * log in our https://argocd.test.com
 * clean old project
 * add our projet
+  * name : **python-app**
+  * project : default
+  * sync policy : **Manual**
+  * coche Auto-Create Namespace
+  * Repo URL : https://github.com/${your_login_in_github}/python-app.git
+  * Revision : main
+  * Path : charts/python-app
+  * Cluster URL : https://kubernetes.default.svc
+  * Namespace : python
+  * the end is taken automaticly from the chart
 * we see it is deploying the previous version
 * let's try to connect/login (insecurely for the moment) with the cli
 
@@ -2442,14 +2452,64 @@ Context 'argocd.test.com' updated
 
 * check the applications we have in argo CD
 
-```
+```bash
 argocd app list
 ```
 
+<details> <summary>results</summary>
+
 ```bash result
 NAME               CLUSTER                         NAMESPACE  PROJECT  STATUS  HEALTH       SYNCPOLICY  CONDITIONS  REPO                                                                   PATH               TARGET
-argocd/pyhton-app  https://kubernetes.default.svc  python     default  Synced  Progressing  Manual      <none>      https://github.com/lucilegabriellefievetlacombe-afk/backstagebase.git  charts/python-app  main
+argocd/pyhton-app  https://kubernetes.default.svc  python     default  Synced  Progressing  Manual      <none>      https://github.com/${your_login_in_github}/pyhton-app.git  charts/python-app  main
 ```
+
+</details>
+
+```bash
+argocd app sync pyhton-app
+```
+
+<details> <summary>results</summary>
+
+```bash result
+TIMESTAMP                  GROUP                    KIND   NAMESPACE                  NAME     STATUS   HEALTH        HOOK  MESSAGE
+2025-12-03T11:38:10+01:00                        Service      python  pyhton-app-python-app    Synced  Healthy
+2025-12-03T11:38:10+01:00   apps              Deployment      python  pyhton-app-python-app    Synced  Healthy
+2025-12-03T11:38:10+01:00  networking.k8s.io     Ingress      python  pyhton-app-python-app    Synced  Healthy
+2025-12-03T11:38:17+01:00   apps              Deployment      python  pyhton-app-python-app    Synced  Healthy              deployment.apps/pyhton-app-python-app unchanged
+2025-12-03T11:38:17+01:00  networking.k8s.io     Ingress      python  pyhton-app-python-app    Synced  Healthy              ingress.networking.k8s.io/pyhton-app-python-app unchanged
+2025-12-03T11:38:17+01:00                        Service      python  pyhton-app-python-app    Synced  Healthy              service/pyhton-app-python-app unchanged
+
+Name:               argocd/pyhton-app
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          python
+URL:                https://argocd.test.com/applications/pyhton-app
+Source:
+- Repo:             https://github.com/lucilegabriellefievetlacombe-afk/backstagebase.git
+  Target:           main
+  Path:             charts/python-app
+SyncWindow:         Sync Allowed
+Sync Policy:        Manual
+Sync Status:        Synced to main (50c2a6b)
+Health Status:      Healthy
+
+Operation:          Sync
+Sync Revision:      50c2a6b149ce6a886c2050557649af6cbcecffc7
+Phase:              Succeeded
+Start:              2025-12-03 11:38:11 +0100 CET
+Finished:           2025-12-03 11:38:17 +0100 CET
+Duration:           6s
+Message:            successfully synced (all tasks run)
+
+GROUP              KIND        NAMESPACE  NAME                   STATUS  HEALTH   HOOK  MESSAGE
+                   Service     python     pyhton-app-python-app  Synced  Healthy        service/pyhton-app-python-app unchanged
+apps               Deployment  python     pyhton-app-python-app  Synced  Healthy        deployment.apps/pyhton-app-python-app unchanged
+networking.k8s.io  Ingress     python     pyhton-app-python-app  Synced  Healthy        ingress.networking.k8s.io/pyhton-app-python-app unchanged
+```
+
+</details>
+
 
 
 ---
