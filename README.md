@@ -2667,10 +2667,23 @@ curl -k https://argocd-server.argocd/
 
 * in our cicd yaml we use **argocd-server.argocd** for argocd login argocd-server.argocd
 * we add need for ci
-* we make change to our app for jobs filter 
+* we make change to our app for jobs filter
+* we install argocd on our runner, from the cd (we could also install it in our dockerfile)
 
-```bash
-
+```yaml
+...
+  cd:
+    needs: ci
+    runs-on: self-hosted
+...
+      - name: Install argocd
+        shell: bash
+        run: |
+          curl -ksSL -o argocd https://argocd-server.argocd/download/argocd-linux-amd64
+          chmod +x argocd
+          sudo mv ./argocd /usr/local/bin/argocd
+      - name: Argocd app sync
+...
 ```
 
 <details> <summary>results</summary>
