@@ -32,6 +32,7 @@ def info():
 @app.route('/api/html/v1/details')
 def details():    
     """say hello in html"""
+
     if datetime.datetime.now().hour > 19:
            return '<h1>hello world, good night</1>'
     elif datetime.datetime.now().hour > 16:
@@ -46,6 +47,7 @@ def details():
 @app.route('/api/json/v1/details')
 def json_details():
     """say hello in json"""
+
     if datetime.datetime.now().hour > 19:
             return jsonify({ 'msg' : 'hello world, good night' })
     elif datetime.datetime.now().hour > 16:

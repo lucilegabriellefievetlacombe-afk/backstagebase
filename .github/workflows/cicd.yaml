@@ -48,12 +48,6 @@ jobs:
     needs: ci
     runs-on: self-hosted
     steps:
-      - name: Shorten commit id
-        shell: bash
-        run: |
-          github_sha_hash=${{ github.sha }}
-          github_sha_short="${github_sha_hash:0:7}"
-          echo "COMMIT_ID=${github_sha_short}" >> "$GITHUB_ENV"
       - name: Install argocd
         shell: bash
         run: |
@@ -63,26 +57,10 @@ jobs:
       - name: Argocd app sync
         shell: bash
         run: |
-          github_sha_hash=${{ github.sha }}
-          github_sha_short="${github_sha_hash:0:7}"
-          echo "COMMIT_ID=${github_sha_short}" >> "$GITHUB_ENV"
           argocd login argocd-server.argocd \
             --insecure  \
             --grpc-web \
             --username admin \
             --password  ${{ secrets.ARGOCD_PASSWORD }}
+          argocd account get-user-info
           argocd app sync python-app
-
-      #- uses: actions/checkout@v3
-
-      #- name: Modify values file
-      #  shell: bash
-      #  run: |
-      #    echo ${{needs.ci.outputs.commit_id}}
-      #    pip install yq
-      #    yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/python-app/values.yaml
-
-      #- name: Commit changes
-      #  uses: EndBug/add-and-commit@v9
-      #  with:
-      #    message: 'Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}'
