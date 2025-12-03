@@ -2064,7 +2064,7 @@ kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download
 * cowboy uninstall
 
 ```bash
-for ns in ``kubectl get namespace -o jsonpath='{.items[*].metadata.name}'`; do
+for ns in `kubectl get namespace -o jsonpath='{.items[*].metadata.name}'`; do
    kubectl delete lease -n $ns cert-manager-cainjector-leader-election cert-manager-controller
 done
 ```
@@ -2572,7 +2572,7 @@ self-hosted-24dkv-cg9gs                     2/2     Running   0             97m
 * get in our selfhosted pod
 
 ```bash
-kubectl exec -ti self-hosted-24dkv-cg9gs -n actions-runner-system --sh
+kubectl exec -ti self-hosted-24dkv-cg9gs -n actions-runner-system -- sh
 ```
 
 <details> <summary>results</summary>

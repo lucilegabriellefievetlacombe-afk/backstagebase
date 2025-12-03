@@ -65,7 +65,7 @@ def json_details():
     elif datetime.datetime.now().hour > 5:
         return jsonify({ 'msg' : 'hello world, goog morning' })
     else:
-        return jsonify({ 'msg' : 'hello world, good dawn' })
+        return jsonify({ 'msg' : 'hello world, good dawn :)' })
 
 @app.route('/api/json/v1/healthz')
 def health():
