@@ -2439,6 +2439,9 @@ rm argocd-linux-amd64
   * Namespace : python
   * the end is taken automaticly from the chart
 * we see it is deploying the previous version
+  
+### Login with argocd command line CLI into our local arocd server
+
 * let's try to connect/login (insecurely for the moment) with the cli
 
 ```bash
@@ -2449,6 +2452,8 @@ argocd login argocd.test.com --insecure --grpc-web --username admin  --password 
 'admin:login' logged in successfully
 Context 'argocd.test.com' updated
 ```
+
+### Sync our Argo CD application with argocd CLI
 
 * check the applications we have in argo CD
 
@@ -2510,6 +2515,172 @@ networking.k8s.io  Ingress     python     pyhton-app-python-app  Synced  Healthy
 
 </details>
 
+### Set sync into github CI CD 
+
+* edit our [.github/worflows/cicd.yml](.github/worflows/cicd.yml)
+* set back ubuntu-latest for ci (buildx is missing in our image)
+* add needs for ci job (slide 55 CD workflows III)
+* add cd sync step with a secret (added in settings > secrets > actions)
+* find the right endpoint for the argocd login from inside our runner
+
+<details> <summary>[.github/worflows/cicd.yml](.github/worflows/cicd.yml)</summary>
+
+```yaml
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    ...
+  cd:
+    needs: ci
+    runs-on: self-hosted
+    steps: 
+      - name: Argocd app sync
+        shell: bash
+        run: |
+          github_sha_hash=${{ github.sha }}
+          github_sha_short="${github_sha_hash:0:7}"
+          echo "COMMIT_ID=${github_sha_short}" >> "$GITHUB_ENV"
+          # argocd login argocd.test.com \
+          argocd login argocd-server.argocd \
+            --insecure  \
+            --grpc-web \
+            --username admin \
+            --password  ${{ secrets.ARGOCD_PASSWORD }}
+          argocd app sync python-app
+```
+
+</details>
+
+### Checking access to our local runner to our local argocd endpoint
+
+```bash
+kubectl get pods -n actions-runner-system
+```
+
+<details> <summary>results</summary>
+
+```bash result
+NAME                                        READY   STATUS    RESTARTS      AGE
+actions-runner-controller-5577b667d-2t2bn   2/2     Running   6 (98m ago)   21h
+self-hosted-24dkv-cg9gs                     2/2     Running   0             97m
+```
+
+</details>
+
+* get in our selfhosted pod
+
+```bash
+kubectl exec -ti self-hosted-24dkv-cg9gs -n actions-runner-system --sh
+```
+
+<details> <summary>results</summary>
+
+
+```bash result
+Defaulted container "runner" out of: runner, docker
+$ hostname
+self-hosted-24dkv-cg9gs
+```
+
+*we are inside the pod*
+
+</details>
+
+* we can get in locally
+* how to access argocd.test.com from inside ? what is the inside endpoint ?
+
+```bash
+curl https://argocd.test.com/
+curl http://argocd.test.com
+curl argocd.test.com
+exit
+```
+
+<details> <summary>results</summary>
+
+
+```bash result
+curl: (7) Failed to connect to argocd.test.com port 443 after 28 ms: Couldn't connect to server
+curl: (7) Failed to connect to argocd.test.com port 80 after 9 ms: Couldn't connect to server
+curl: (7) Failed to connect to argocd.test.com port 80 after 14 ms: Couldn't connect to server
+```
+
+</details>
+
+* we have a DNS problem
+
+```bash
+kubectl get svc -n argocd
+```
+
+<details> <summary>results</summary>
+
+
+```bash result
+NAME                               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+argocd-applicationset-controller   ClusterIP   10.96.67.204    <none>        7000/TCP            9d
+argocd-dex-server                  ClusterIP   10.96.254.118   <none>        5556/TCP,5557/TCP   9d
+argocd-redis                       ClusterIP   10.96.170.5     <none>        6379/TCP            9d
+argocd-repo-server                 ClusterIP   10.96.107.155   <none>        8081/TCP            9d
+argocd-server                      ClusterIP   10.96.51.228    <none>        80/TCP,443/TCP      9d
+```
+
+*argocd-server is the one we look for*
+
+</details>
+
+* we wand to connect to argocd-server 10.96.51.228
+* we will add the name-space where argocd lives
+
+```bash
+curl https://argocd-server.argocd/
+```
+
+<details> <summary>results</summary>
+
+
+```bash result
+curl: (60) SSL certificate problem: self-signed certificate
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+```
+
+</details>
+
+* we have a pb of certificate, we will escape with curl -k
+
+```bash
+curl -k https://argocd-server.argocd/
+```
+
+<details> <summary>results</summary>
+
+
+```bash result
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Argo CD</title><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/png" href="assets/favicon/favicon-32x32.png" sizes="32x32"/><link rel="icon" type="image/png" href="assets/favicon/favicon-16x16.png" sizes="16x16"/><link href="assets/fonts.css" rel="stylesheet"><script defer="defer" src="main.b8f3b898a503e41b9e16.js"></script></head><body><noscript><p>Your browser does not support JavaScript. Please enable JavaScript to view the site. Alternatively, Argo CD can be used with the <a href="https://argoproj.github.io/argo-cd/cli_installation/">Argo CD CLI</a>.</p></noscript><div id="app"></div></body><script defer="defer" src="extensions.js"></script></html>
+```
+
+</details>
+
+* in our cicd yaml we use **argocd-server.argocd** for argocd login argocd-server.argocd
+* we add need for ci
+* we make change to our app for jobs filter 
+
+```bash
+
+```
+
+<details> <summary>results</summary>
+
+
+```bash result
+
+```
+
+</details>
 
 
 ---
@@ -2524,8 +2695,9 @@ networking.k8s.io  Ingress     python     pyhton-app-python-app  Synced  Healthy
 
 <details> <summary>results</summary>
 
+
 ```bash result
-TODO
+
 ```
 
 </details>

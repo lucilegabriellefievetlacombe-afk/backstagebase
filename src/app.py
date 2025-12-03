@@ -50,6 +50,8 @@ def json_details():
             return jsonify({ 'msg' : 'hello world, good evening' })
     elif datetime.datetime.now().hour > 12:
             return jsonify({ 'msg' : 'hello world, good afternoon' })
+    elif datetime.datetime.now().hour > 11:
+            return jsonify({ 'msg' : 'hello world, good noon' })
     else:
             return jsonify({ 'msg' : 'hello world, good morning' })
 
