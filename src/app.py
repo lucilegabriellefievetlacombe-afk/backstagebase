@@ -38,6 +38,8 @@ def details():
            return '<h1>hello world, good evening</1>'
     elif datetime.datetime.now().hour > 12:
            return '<h1>hello world, good afternoon</1>'
+    elif datetime.datetime.now().hour > 11:
+           return '<h1>hello world, good noon</1>'
     else:
            return '<h1>hello world, good morning</1>'
 
