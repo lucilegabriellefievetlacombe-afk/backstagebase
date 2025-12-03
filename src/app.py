@@ -43,8 +43,12 @@ def details():
         return '<h1>hello world, good afternoon</1>'
     elif datetime.datetime.now().hour > 11:
         return '<h1>hello world, good noon</1>'
-    else:
+    elif datetime.datetime.now().hour > 10:
+        return '<h1>hello world, have a nice late morning</1>'
+    elif datetime.datetime.now().hour > 5:
         return '<h1>hello world, good morning</1>'
+    else:
+        return '<h1>hello world, have a nice dawn</1>'
 
 @app.route('/api/json/v1/details')
 def json_details():
