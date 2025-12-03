@@ -33,31 +33,33 @@ def info():
 def details():    
     """say hello in html"""
 
-    if datetime.datetime.now().hour > 19:
-           return '<h1>hello world, good night</1>'
+    if datetime.datetime.now().hour > 21:
+        return '<h1>hello world, good night</1>'
+    elif datetime.datetime.now().hour > 19:
+        return '<h1>hello world, enjoy the rest of your evening</1>'
     elif datetime.datetime.now().hour > 16:
-           return '<h1>hello world, good evening</1>'
+        return '<h1>hello world, have a pleasant evening</1>'
     elif datetime.datetime.now().hour > 12:
-           return '<h1>hello world, good afternoon</1>'
+        return '<h1>hello world, good afternoon</1>'
     elif datetime.datetime.now().hour > 11:
-           return '<h1>hello world, good noon</1>'
+        return '<h1>hello world, good noon</1>'
     else:
-           return '<h1>hello world, good morning</1>'
+        return '<h1>hello world, good morning</1>'
 
 @app.route('/api/json/v1/details')
 def json_details():
     """say hello in json"""
 
     if datetime.datetime.now().hour > 19:
-            return jsonify({ 'msg' : 'hello world, good night' })
+        return jsonify({ 'msg' : 'hello world, good night' })
     elif datetime.datetime.now().hour > 16:
-            return jsonify({ 'msg' : 'hello world, good evening' })
+        return jsonify({ 'msg' : 'hello world, good evening' })
     elif datetime.datetime.now().hour > 12:
-            return jsonify({ 'msg' : 'hello world, good afternoon' })
+        return jsonify({ 'msg' : 'hello world, good afternoon' })
     elif datetime.datetime.now().hour > 11:
-            return jsonify({ 'msg' : 'hello world, good noon' })
+        return jsonify({ 'msg' : 'hello world, good noon' })
     else:
-            return jsonify({ 'msg' : 'hello world, good morning' })
+        return jsonify({ 'msg' : 'hello world, good morning' })
 
 @app.route('/api/json/v1/healthz')
 def health():
