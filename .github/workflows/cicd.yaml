@@ -48,7 +48,7 @@ jobs:
     needs: ci
     runs-on: self-hosted
     steps:
-      - name: Install argocd
+      - name: Install argocd on our self runner
         shell: bash
         run: |
           curl -ksSL -o argocd https://argocd-server.argocd/download/argocd-linux-amd64
@@ -64,3 +64,12 @@ jobs:
             --password  ${{ secrets.ARGOCD_PASSWORD }}
           argocd account get-user-info
           argocd app sync pyhton-app
+      - name: Check shorten commit id output
+        shell: bash
+        run: |
+          echo ${{needs.ci.outputs.commit_id}}
+      - name: Modify our python app chart values file
+        shell: bash
+        run : |
+          pip install yq
+          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/python-app/values.yaml

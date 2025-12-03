@@ -2411,6 +2411,8 @@ NAME                              ENTERPRISE   ORGANIZATION   REPOSITORY        
 self-hosted-24dkv-7cxxv                                       ${your_login_in_github}/pyhton-app                    Running                                2m55s
 ```
 
+</details>
+
 |url| settings > Actions > Runners |
 |---|--- |
 |https://github.com/${your_login_in_github}/pyhton-app/settings/actions/runners|![self hosted, default vs helm](docs/images/self-hosted-runner.png)|
@@ -2686,14 +2688,35 @@ curl -k https://argocd-server.argocd/
 ...
 ```
 
-<details> <summary>results</summary>
+* argocd sync works, but our application is not uptated.
+* our chart of python-app is fixed on v2
+* we pushed new tags on dockerhub, but the are not taken in account
+* we have to modify our image tag value in our python-app chart
+  * we need to get the shorten commit id of ci job, we use outputs
+  * we need to replace the tag value, with something like sed or yq ..etc
 
-
-```bash result
-
+ ```yaml
+ jobs:
+  ci:
+ ...
+    outputs:
+      commit_id: ${{ env.COMMIT_ID }}
+...
+  cd:
+    needs: ci
+...
+      - name: Check shorten commit id output
+        shell: bash
+        run: |
+          echo ${{needs.ci.outputs.commit_id}}
+      - name: Modify our python app chart values file
+        shell: bash
+        run : |
+          pip install yq
+          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/python-app/values.yaml
+...
 ```
 
-</details>
 
 
 ---
