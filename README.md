@@ -1,5 +1,5 @@
 
-# Learn Platform Engineering, Backstage, Kubernetes, ArgoCD, Docker, GitOps, Helm, GitHub Actions & CI/CD to build IDPs
+# Learn Kubernetes, ArgoCD, Docker, GitOps, Helm, GitHub Actions & CI/CD prerequisites to build IDPs Platform Engineering, Backstage
 
 *To get a personalized course, create or/and get your ids of dockerhub and github; create a branch with my_course__%YourDockerHubLogin%__%your_login_in_github%.
 Replace your-own-github-account with your account name on github.
@@ -2717,23 +2717,8 @@ curl -k https://argocd-server.argocd/
 ...
 ```
 
+### QUIZ
 
+[Legendary Level DevOps Quiz](https://squad.udemy.com/course/from-devops-to-platform-engineering-master-backstage-idps/learn/quiz/6883407#overview)
 
----
-
-#### Custom Resource Definitions (CRDs)
-
-* add CRDs with 
-
-```bash
-
-```
-
-<details> <summary>results</summary>
-
-
-```bash result
-
-```
-
-</details>
+Now we are read for backstage learning :)
