@@ -210,7 +210,6 @@ and integrate systems more effectively
 
 </details>
 
-
 <details> <summary>[Ricardo Andrea Gonzalez Gomez](https://squad.udemy.com/user/ricardo-andre-gonzalez-gomez/)</summary>
 
 * DevOps Engineer & SysAdmin.
@@ -2721,4 +2720,6 @@ curl -k https://argocd-server.argocd/
 
 [Legendary Level DevOps Quiz](https://squad.udemy.com/course/from-devops-to-platform-engineering-master-backstage-idps/learn/quiz/6883407#overview)
 
-Now we are read for backstage learning :)
+> Now we are read for backstage learning :)
+
+* Me testing backstage part [ backstage-app ](https://github.com/lucilegabriellefievetlacombe-afk/backstage-app)
