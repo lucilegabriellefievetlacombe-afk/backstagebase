@@ -37,4 +37,8 @@ docker run -dp 8080:5000 python-app:v2
 * k8s deployments
 
 [k8s](https://github.com/lucilegabriellefievetlacombe-afk/backstagebase/tree/main?tab=readme-ov-file#1---get-kind-our-kubernetes-local-cluster)
+
+# Howto Check Health
+
 You can check the app health by accessing this URL: `python-app.test.com/api/v1/healthz` 
+
