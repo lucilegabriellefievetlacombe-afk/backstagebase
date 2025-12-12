@@ -1879,9 +1879,9 @@ echo "THEPASSWORD:)GIVENINLINE3" | base64 -d
 <details> <summary>results</summary>
 
 ```bash result
-piVersion: v1
+apiVersion: v1
 data:
-  password: WUNtM0FDbjdobjQ5Ny1law==
+  password: THEPASSWORD:)GIVENINLINE3
 kind: Secret
 metadata:
   creationTimestamp: "2025-11-23T11:50:55Z"
@@ -1893,7 +1893,7 @@ type: Opaque
 ```
 
 ```bash
-Lq$�9base64invalid-ek
+TheRealPassWord-ek
 ```
 
 </details>
