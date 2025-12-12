@@ -11,14 +11,14 @@ def home():
     return """
     <h1>home</h1>
     <ul>
-        <li><a href="api/json/v1/info">info</a></li>
-        <li><a href="api/html/v1/details">hello</a></li>
-        <li><a href="api/json/v1/details">json hello</a></li>
+        <li><a href="api/json/v1/infos">json infos & greetings</a></li>
+        <li><a href="api/html/v1/greetings">greetings</a></li>
+        <li><a href="api/json/v1/greetings">json greetings</a></li>
         <li><a href="api/json/v1/healthz">health check</a></li>
     </ul>
     """
 
-@app.route('/api/json/v1/info')
+@app.route('/api/json/v1/infos')
 def info():
     """get time, hostname and blabla"""
     return jsonify({
@@ -29,7 +29,7 @@ def info():
         'deployed_on': 'localhost 4 the moment'
     })
 
-@app.route('/api/html/v1/details')
+@app.route('/api/html/v1/greetings')
 def details():    
     """say hello in html"""
 
@@ -50,7 +50,7 @@ def details():
     else:
         return '<h1>hello world, have a nice dawn</1>'
 
-@app.route('/api/json/v1/details')
+@app.route('/api/json/v1/greetings')
 def json_details():
     """say hello in json"""
 
@@ -77,3 +77,4 @@ if __name__ == '__main__':
     #app.run()
     ## from anywhere :]
     app.run(host="0.0.0.0")
+
