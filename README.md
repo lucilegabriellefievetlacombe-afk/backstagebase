@@ -1413,7 +1413,7 @@ ls
 * we look the template directory
 
 ```bash
-charts/python-app-wsl2/$ ls -al templates
+charts/python-app/$ ls -al templates
 ```
 
 <details> <summary>results</summary>
