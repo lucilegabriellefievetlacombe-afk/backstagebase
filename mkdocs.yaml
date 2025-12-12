@@ -1,13 +1,18 @@
 site_name: 'python-app'
-site_description: 'Main documentation for the python-app'
+site_description: 'Main documentation for the greeting python-app'
 repo_url: https://github.com/lucilegabriellefievetlacombe-afk/backstagebase
 edit_uri: edit/main/docs
 
 plugins:
   - techdocs-core
+  - redirects:
+      redirect_maps:
+        'index.md': 'overview/what-is-backstage.md'
 
 # For sidebar navigation on https://backstage.io/, see `microsite/sidebars.json`
 nav:
   - Overview:
-
+      - Base of GitOps for backstage: README.md 
+  - Getting Started:
       - Getting started: 'docs/index.md'
+
