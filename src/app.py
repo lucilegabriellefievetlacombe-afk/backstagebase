@@ -73,8 +73,15 @@ def health():
 	# Do an actual check here
     return jsonify({'status': 'up'}), 200
 
+@app.route('/api/json/healthz')
+def health():
+    """get health status"""
+	# Do an actual check here
+    return jsonify({'status': 'up'}), 200
+
 if __name__ == '__main__':
     #app.run()
     ## from anywhere :]
     app.run(host="0.0.0.0")
+
 
