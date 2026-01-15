@@ -12,8 +12,8 @@ def home():
     <h1>home</h1>
     <ul>
         <li><a href="api/json/v1/info">info</a></li>
-        <li><a href="api/html/v1/details">hello</a></li>
-        <li><a href="api/json/v1/details">json hello</a></li>
+        <li><a href="api/html/v1/grettings">hello</a></li>
+        <li><a href="api/json/v1/grettings">json hello</a></li>
         <li><a href="api/json/v1/healthz">health check</a></li>
     </ul>
     """
@@ -29,7 +29,7 @@ def info():
         'deployed_on': 'localhost 4 the moment'
     })
 
-@app.route('/api/html/v1/details')
+@app.route('/api/html/v1/grettings')
 def details():    
     """say hello in html"""
 
@@ -50,7 +50,7 @@ def details():
     else:
         return '<h1>hello world, have a nice dawn</1>'
 
-@app.route('/api/json/v1/details')
+@app.route('/api/json/v1/grettings')
 def json_details():
     """say hello in json"""
 
